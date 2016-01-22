@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Document</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="login">登录</string>
+
+    <string name="sure">确认</string>
+    <string name="cancel">取消</string>
+
+    <string name="menu_doc">资料</string>
+    <string name="menu_offer">悬赏</string>
+    <string name="menu_my_download">我的下载</string>
+    <string name="menu_my_offer">我的悬赏</string>
+</resources>

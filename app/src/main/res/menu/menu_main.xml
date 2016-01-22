@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+
+    <item android:id="@+id/menu_doc"
+        android:title="@string/menu_doc"/>
+
+    <item android:id="@+id/menu_offer"
+        android:title="@string/menu_offer"/>
+
+    <item android:id="@+id/menu_my_download"
+        android:title="@string/menu_my_download"/>
+
+    <item android:id="@+id/menu_my_offer"
+        android:title="@string/menu_my_offer"/>
+
+</menu>

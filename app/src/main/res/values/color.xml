@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pdf">#f44336</color>
+    <color name="word">#1976d2</color>
+    <color name="excle">#4caf50</color>
+    <color name="pic">#ff5722</color>
+
+    <color name="colorPrimary">#2196f3</color>
+    <color name="colorPrimaryDark">#1976d2</color>
+    <color name="colorAcent">#1976d2</color>
+    <color name="white">#ffffff</color>
+</resources>
