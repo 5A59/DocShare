@@ -13,4 +13,8 @@
     <string name="menu_offer">悬赏</string>
     <string name="menu_my_download">我的下载</string>
     <string name="menu_my_offer">我的悬赏</string>
+    <string name="menu_trans">传输列表</string>
+
+    <string name="upload">上传</string>
+    <string name="add_file">添加文件</string>
 </resources>

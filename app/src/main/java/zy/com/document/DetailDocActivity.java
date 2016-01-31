@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import java.io.File;
 import java.util.Vector;
 
 import docnetwork.DocNetwork;
@@ -18,8 +19,10 @@ import docnetwork.HttpUrl;
 import docnetwork.dataobj.Doc;
 import docsadapter.DetailDocAdapter;
 import fileselecter.OnRecyclerItemClickListener;
+import network.MyDownloadManager;
 import network.listener.DownloadProcessListener;
 import network.ThreadPool;
+import utils.GeneralUtils;
 import utils.Logger;
 
 /**
@@ -109,22 +112,23 @@ public class DetailDocActivity extends AppCompatActivity{
         final String fileUrl = HttpUrl.mainUrl + files[pos];
         String[] fileNames = files[pos].split("/");
         final String fileName = fileNames[fileNames.length - 1];
-        Logger.d("file url :  " + fileUrl + "  file name  :  " + fileName);
         ThreadPool.getInstance().submit(new Runnable() {
             @Override
             public void run() {
                 Logger.d("start download");
-                DocNetwork.getInstance().downloadFile(new DownloadProcessListener() {
-                    @Override
-                    public void update(long hasRead, long length, boolean done) {
-                        Vector v = new Vector();
-                        v.add(pos);
-                        v.add(hasRead);
-                        v.add(length);
-                        v.add(done);
-                        handler.sendMessage(handler.obtainMessage(DOWNLOAD_UPDATE, v));
-                    }
-                }, fileUrl, fileName);
+                File toFile = new File(GeneralUtils.getInstance().getFileSavePath() + "/" + fileName);
+                MyDownloadManager.getInstance().download(fileUrl, toFile);
+//                DocNetwork.getInstance().downloadFile(new DownloadProcessListener() {
+//                    @Override
+//                    public void update(long hasRead, long length, boolean done) {
+//                        Vector v = new Vector();
+//                        v.add(pos);
+//                        v.add(hasRead);
+//                        v.add(length);
+//                        v.add(done);
+//                        handler.sendMessage(handler.obtainMessage(DOWNLOAD_UPDATE, v));
+//                    }
+//                }, fileUrl, fileName);
             }
         });
     }

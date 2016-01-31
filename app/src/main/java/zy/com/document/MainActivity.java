@@ -17,16 +17,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.CheckedInputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import docnetwork.DocNetwork;
 import docnetwork.HttpData;
 import docnetwork.SuccessCheck;
-import docnetwork.dataobj.Doc;
 import docnetwork.dataobj.Info;
 import docnetwork.dataobj.Login;
 import fragment.DocsFragment;
+import fragment.DownloadManagerFragment;
 import fragment.OfferFragment;
 import network.ThreadPool;
 import utils.GeneralUtils;
@@ -37,8 +36,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int INFO_RES_CODE = 0;
     private static final int DOC = 0;
     private static final int OFFER = 1;
+    private static final int DOWNLOAD = 2;
     private static final String DOC_TAG = "doc";
     private static final String OFFER_TAG = "offer";
+    private static final String DOWNLOAD_TAG = "download";
 
     private int CUR = -1;
     private int FRAGMENT_ID = 0;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DocsFragment docsFragment;
     private OfferFragment offerFragment;
+    private DownloadManagerFragment downloadManagerFragment;
 
     private List<Fragment> fragmentList;
 
@@ -78,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
     private void init(){
         initToolBar();
         initData();
+        initFragment();
         initView();
         initInfo();
-        initFragment();
     }
 
     private void initToolBar(){
@@ -102,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
     private void initData(){
         FRAGMENT_ID = R.id.fragment;
         loginMes = (Login) getIntent().getSerializableExtra("login");
-        initFragment();
     }
 
     private void initView(){
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                         startOffer();
                         break;
                     case R.id.menu_my_download:
+                        startDownload();
                         break;
                     case R.id.menu_my_offer:
                         break;
@@ -149,12 +151,15 @@ public class MainActivity extends AppCompatActivity {
     private void initFragment(){
         docsFragment = new DocsFragment();
         offerFragment = new OfferFragment();
+        downloadManagerFragment = new DownloadManagerFragment();
         fragmentList = new ArrayList<>();
         fragmentList.add(docsFragment);
         fragmentList.add(offerFragment);
+        fragmentList.add(downloadManagerFragment);
 
         addFragment(docsFragment);
         addFragment(offerFragment);
+        addFragment(downloadManagerFragment);
     }
 
     private void setHeader(Info info){
@@ -178,6 +183,10 @@ public class MainActivity extends AppCompatActivity {
         changeFragment(OFFER);
     }
 
+    private void startDownload() {
+        changeFragment(DOWNLOAD);
+    }
+
     private void changeFragment(int willBe){
         if (CUR == willBe){
             return ;
@@ -189,6 +198,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case OFFER:
                 changeFragment(FRAGMENT_ID, offerFragment, OFFER_TAG);
+                break;
+            case DOWNLOAD:
+                changeFragment(FRAGMENT_ID, downloadManagerFragment, DOWNLOAD_TAG);
                 break;
         }
         CUR = willBe;

@@ -53,19 +53,19 @@ public class LoginActivity extends AppCompatActivity{
 
         userNameEdit = (EditText) this.findViewById(R.id.edit_username);
         pwdEdit = (EditText) this.findViewById(R.id.edit_password);
-        loginButton = (Button) this.findViewById(R.id.button_login);
+        userNameEdit.setText("18840829553");
+        pwdEdit.setText("zhangyi5");
 
+        loginButton = (Button) this.findViewById(R.id.button_login);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, TestActivity.class);
-                startActivity(intent);
-//                String userName = userNameEdit.getText().toString();
-//                String pwd = pwdEdit.getText().toString();
-//
-//                userName = "18840829553";
-//                pwd = "zhangyi5";
-//                login(userName, pwd);
+//                Intent intent = new Intent(LoginActivity.this, TestActivity.class);
+//                startActivity(intent);
+                String userName = userNameEdit.getText().toString();
+                String pwd = pwdEdit.getText().toString();
+
+                login(userName, pwd);
             }
         });
     }

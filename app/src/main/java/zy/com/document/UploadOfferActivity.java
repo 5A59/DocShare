@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import docnetwork.DocNetwork;
-import fileselecter.FileSelecterActivity;
 import fileselecter.FileList;
+import fileselecter.FileSelecterActivity;
 import network.ThreadPool;
 import network.listener.UploadProcessListener;
 import utils.Logger;
@@ -27,15 +27,13 @@ import utils.Logger;
 /**
  * Created by zy on 16-1-6.
  */
-public class UploadActivity extends AppCompatActivity implements View.OnClickListener{
+public class UploadOfferActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final int UPLOAD_RES_CODE = 0;
 
     private EditText titleEdit;
     private EditText contentEdit;
-    private Button fileButton;
     private Button uploadButton;
-    private TextView fileText;
 
     private List<File> fileList;
 
@@ -53,7 +51,7 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_upload);
+        setContentView(R.layout.activity_upload_offer);
         init();
     }
 
@@ -63,13 +61,8 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
 
         titleEdit = (EditText) this.findViewById(R.id.edit_title);
         contentEdit = (EditText) this.findViewById(R.id.edit_content);
-        fileButton = (Button) this.findViewById(R.id.button_add_file);
         uploadButton = (Button) this.findViewById(R.id.button_upload);
-
-        fileButton.setOnClickListener(this);
         uploadButton.setOnClickListener(this);
-
-        fileText = (TextView) this.findViewById(R.id.text_files);
     }
 
     private void initToolBar(){
@@ -95,10 +88,6 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.button_add_file:
-                Intent intent = new Intent(this, FileSelecterActivity.class);
-                startActivityForResult(intent, FileSelecterActivity.FILE_SELECT_RES_CODE);
-                break;
             case R.id.button_upload:
                 upload();
                 break;
@@ -125,26 +114,10 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
                     });
                 }
                 boolean res = DocNetwork.getInstance()
-                        .uploadDoc(title, content, school, college, subject, fileList, listenerMap);
+                        .uploadOfferReword(title, content, school, college, subject);
                 Logger.d("uuuuuuu " + res);
                 handler.sendMessage(handler.obtainMessage(UPLOAD_RES_CODE, res));
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == FileSelecterActivity.FILE_SELECT_RES_CODE){
-            FileList tmpFile = (FileList) data.getSerializableExtra(FileSelecterActivity.FILE_SELECT_RES_KEY);
-            if (tmpFile.getFiles() != null){
-                fileList.addAll(tmpFile.getFiles());
-                String fileString = "";
-                for (File f : fileList){
-                    fileString += f.getPath();
-                }
-                fileText.setText(fileString);
-            }
-        }
     }
 }

@@ -14,4 +14,6 @@
     <item android:id="@+id/menu_my_offer"
         android:title="@string/menu_my_offer"/>
 
+    <item android:id="@+id/menu__trans"
+        android:title="@string/menu_trans"/>
 </menu>

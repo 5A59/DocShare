@@ -336,6 +336,35 @@ public class DocNetwork {
         return null;
     }
 
+    public Doc getMyDownload() {
+        Response response = null;
+        try{
+            response = network.get(HttpUrl.getMyDownloadUrl);
+            Doc doc = JsonUtil.getInstance().docParse(response.body().string());
+            if (SuccessCheck.ifSuccess(doc.getCode())){
+                return doc;
+            }
+        }catch (Exception e) {
+            Logger.d("exception in get my download");
+        }
+        return new Doc();
+    }
+
+    public OfferReword getMyOffer() {
+        Response response = null;
+        try{
+            response = network.get(HttpUrl.getMyOfferUrl);
+            OfferReword offer = JsonUtil.getInstance().offerParse(response.body().string());
+            if (SuccessCheck.ifSuccess(offer.getCode())){
+                return offer;
+            }
+        }catch (Exception e) {
+            Logger.d("exception in get my download");
+        }
+        return new OfferReword();
+
+    }
+
     public void downloadFile(DownloadProcessListener listener, String url, String fileName){
         File fileDir = new File(GeneralUtils.getInstance().getFileSavePath());
         if (!fileDir.exists()){

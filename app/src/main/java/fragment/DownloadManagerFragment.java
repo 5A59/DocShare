@@ -52,7 +52,7 @@ public class DownloadManagerFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_download_manager, container);
+        rootView = inflater.inflate(R.layout.fragment_download_manager, null);
         return rootView;
     }
 

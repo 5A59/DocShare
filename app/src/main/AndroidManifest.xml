@@ -30,7 +30,7 @@
             android:name="fileselecter.FileSelecterActivity">
         </activity>
         <activity
-            android:name=".UploadActivity">
+            android:name=".UploadDocActivity">
         </activity>
         <activity
             android:name=".OfferActivity">

@@ -24,7 +24,7 @@ import fileselecter.OnRecyclerItemClickListener;
 import network.ThreadPool;
 import zy.com.document.DetailDocActivity;
 import zy.com.document.R;
-import zy.com.document.UploadActivity;
+import zy.com.document.UploadDocActivity;
 
 /**
  * Created by zy on 16-1-2.
@@ -130,7 +130,7 @@ public class DocsFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UploadActivity.class);
+                Intent intent = new Intent(getActivity(), UploadDocActivity.class);
                 startActivity(intent);
             }
         });

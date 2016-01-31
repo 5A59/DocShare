@@ -189,11 +189,32 @@ public class Network {
         return postFile(defaultClient, url, HttpHeader.getHeader(),para, file, listener);
     }
 
+    /**
+     * post one file with one para
+     * @param client
+     * @param url
+     * @param para
+     * @param file
+     * @param mulFile
+     * @return
+     * @throws IOException
+     */
     public Response postFile(OkHttpClient client,String url,
                              Map<String,String> para,Map<String,List<File>> file, boolean mulFile) throws IOException {
         return postFile(client, url, HttpHeader.getHeader(),para, file, mulFile);
     }
 
+    /**
+     * post multi files with one para
+     * @param client
+     * @param url
+     * @param header
+     * @param para
+     * @param files several files with one para , in server , it will be recvive several files by getting one para
+     * @param mulFile useless , using just distinguish the para map<String,List<File>> with map<String,File>
+     * @return
+     * @throws IOException
+     */
     public Response postFile(OkHttpClient client,String url,
                              Map<String,String> header, Map<String,String> para,
                              Map<String,List<File>> files, boolean mulFile) throws IOException {
@@ -218,6 +239,17 @@ public class Network {
         return  response;
     }
 
+    /**
+     * using UploadProcessListener to listen state of file uploading
+     * @param client
+     * @param url
+     * @param header
+     * @param para
+     * @param files
+     * @param listener
+     * @return
+     * @throws IOException
+     */
     public Response postFile(OkHttpClient client,String url,
                              Map<String,String> header, Map<String,String> para,
                              Map<String,List<File>> files, Map<String, UploadProcessListener> listener) throws IOException {
@@ -307,7 +339,7 @@ public class Network {
 
         MultipartBuilder fileBuilder = new MultipartBuilder();
         fileBuilder.type(MultipartBuilder.FORM);
-
+//
         Set<String> key = files.keySet();
         for (String k : key){
             fileBuilder.addFormDataPart(k, files.get(k).getName(),
@@ -322,6 +354,13 @@ public class Network {
         builder.post(fileBuilder.build());
     }
 
+    /**
+     *
+     * @param builder
+     * @param para
+     * @param files
+     * @param mulFile useless , using just distinguish the para map<String,List<File>> with map<String,File>
+     */
     public void buildPostFile(Request.Builder builder, Map<String,String> para, Map<String,List<File>> files,
                               boolean mulFile){
 

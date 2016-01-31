@@ -14,7 +14,8 @@
     </com.srx.widget.PullToLoadView>
 
     <com.shamanland.fab.FloatingActionButton
-        android:id="@+id/fab"
+
+ uuuuuuuuuuuuuuu      android:id="@+id/fab"
         android:layout_width="@dimen/fab_size_normal"
         android:layout_height="@dimen/fab_size_normal"
         android:layout_alignParentBottom="true"
