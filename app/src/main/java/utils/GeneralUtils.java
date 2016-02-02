@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 
+import docnetwork.HttpUrl;
 import zy.com.document.R;
 
 /**
@@ -72,6 +73,8 @@ public class GeneralUtils {
         }else if (postfix.equals("MP4") || postfix.equals("RMVB") || postfix.equals("AVI")
                 || postfix.equals("WMV")){
             return R.mipmap.video;
+        }else if (ifPic(postfix)){
+            return R.mipmap.pic;
         }
 
         return R.mipmap.unknow;
@@ -116,14 +119,25 @@ public class GeneralUtils {
         if (resFile == null){
             return ;
         }
+        if (resFile.isDirectory()){
+            setPic(context, imageView,
+                    R.mipmap.folder, R.mipmap.folder, R.mipmap.folder);
+            return ;
+        }
         String postfix = getFilePostfix(resFile.getName());
         if (ifPic(postfix)) {
             setPic(context, imageView, resFile, R.mipmap.pic, R.mipmap.pic);
         }else if (ifApk(postfix)){
             setApk(context, imageView, resFile);
         }else {
-            imageView.setImageResource(getBackByPostfix(postfix));
+//            imageView.setImageResource(getBackByPostfix(postfix));
+            setPic(context, imageView, getBackByPostfix(postfix), R.mipmap.unknow, R.mipmap.unknow);
         }
+    }
+
+    public void setIcon(Context context, ImageView imageView, String fileName){
+        String postfix = getFilePostfix(fileName);
+        imageView.setImageResource(getBackByPostfix(postfix));
     }
 
     public void setHeadImg(Context context, ImageView view, String url){
@@ -139,6 +153,14 @@ public class GeneralUtils {
 
     }
 
+    public void setPic(Context context, ImageView view, int id, int errid, int loading){
+        Glide.with(context)
+                .load(id)
+                .error(errid)
+                .placeholder(loading)
+                .into(view);
+    }
+
     public void setPic(Context context, ImageView imageView, File resFile, int errid, int loading){
         Glide.with(context)
                 .load(resFile)
@@ -149,4 +171,13 @@ public class GeneralUtils {
                 .into(imageView);
     }
 
+    public String getFullUrl(String url){
+        return HttpUrl.mainUrl + url;
+    }
+
+    public String getFileName(String file){
+        String [] tmp = file.split("\\/");
+        return tmp[tmp.length - 1];
+
+    }
 }

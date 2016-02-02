@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,13 +29,12 @@ import utils.Logger;
 /**
  * Created by zy on 16-1-6.
  */
-public class UploadOfferActivity extends AppCompatActivity implements View.OnClickListener{
+public class UploadOfferActivity extends AppCompatActivity {
 
     private static final int UPLOAD_RES_CODE = 0;
 
     private EditText titleEdit;
     private EditText contentEdit;
-    private Button uploadButton;
 
     private List<File> fileList;
 
@@ -55,14 +56,29 @@ public class UploadOfferActivity extends AppCompatActivity implements View.OnCli
         init();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_upload:
+                upload();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void init(){
         initToolBar();
         initData();
 
         titleEdit = (EditText) this.findViewById(R.id.edit_title);
         contentEdit = (EditText) this.findViewById(R.id.edit_content);
-        uploadButton = (Button) this.findViewById(R.id.button_upload);
-        uploadButton.setOnClickListener(this);
     }
 
     private void initToolBar(){
@@ -83,15 +99,6 @@ public class UploadOfferActivity extends AppCompatActivity implements View.OnCli
 
     private void initData(){
         fileList = new ArrayList<>();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.button_upload:
-                upload();
-                break;
-        }
     }
 
     private void upload(){

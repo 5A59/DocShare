@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -26,9 +27,12 @@ public class LoginActivity extends AppCompatActivity{
 
     private Login loginMes;
 
+    private Boolean logining;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            logining = false;
             if (msg.what == LOGIN_ID){
                 loginMes = (Login) msg.obj;
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -50,6 +54,7 @@ public class LoginActivity extends AppCompatActivity{
 
     private void init(){
         initHttpCookie();
+        logining = false;
 
         userNameEdit = (EditText) this.findViewById(R.id.edit_username);
         pwdEdit = (EditText) this.findViewById(R.id.edit_password);
@@ -62,10 +67,13 @@ public class LoginActivity extends AppCompatActivity{
             public void onClick(View v) {
 //                Intent intent = new Intent(LoginActivity.this, TestActivity.class);
 //                startActivity(intent);
-                String userName = userNameEdit.getText().toString();
-                String pwd = pwdEdit.getText().toString();
+                if (!logining){
+                    logining = true;
+                    String userName = userNameEdit.getText().toString();
+                    String pwd = pwdEdit.getText().toString();
 
-                login(userName, pwd);
+                    login(userName, pwd);
+                }
             }
         });
     }

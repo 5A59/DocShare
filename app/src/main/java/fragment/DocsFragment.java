@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import docnetwork.dataobj.Doc;
 import docsadapter.DocAdapter;
 import fileselecter.OnRecyclerItemClickListener;
 import network.ThreadPool;
+import utils.Logger;
 import zy.com.document.DetailDocActivity;
 import zy.com.document.R;
 import zy.com.document.UploadDocActivity;
@@ -55,8 +57,11 @@ public class DocsFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             Doc tmpDoc = (Doc) msg.obj;
-            pullToLoadView.setComplete();
             isLoading = false;
+            pullToLoadView.setComplete();
+            if (tmpDoc != null && tmpDoc.getDoc() != null && !tmpDoc.getDoc().isEmpty()){
+                page ++;
+            }
             switch (msg.what){
                 case LOADMORE:
                     doc.appendDocMes(tmpDoc);
@@ -166,6 +171,7 @@ public class DocsFragment extends Fragment {
     }
 
     private void loadMore(){
+        Logger.d("load more");
         getDoc(0);
     }
 

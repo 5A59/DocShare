@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
+    android:paddingLeft="@dimen/recycle_padding"
+    android:paddingRight="@dimen/recycle_padding"
     tools:context=".MainActivity">
 
     <com.srx.widget.PullToLoadView
@@ -14,8 +16,7 @@
     </com.srx.widget.PullToLoadView>
 
     <com.shamanland.fab.FloatingActionButton
-
- uuuuuuuuuuuuuuu      android:id="@+id/fab"
+        android:id="@+id/fab"
         android:layout_width="@dimen/fab_size_normal"
         android:layout_height="@dimen/fab_size_normal"
         android:layout_alignParentBottom="true"
@@ -23,6 +24,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/fab_right"
         android:layout_marginBottom="@dimen/fab_bottom"
+        android:src="@mipmap/add"
         android:scaleType="fitXY"
         app:floatingActionButtonColor="@color/colorPrimary"
         app:floatingActionButtonSize="normal"

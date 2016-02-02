@@ -25,6 +25,7 @@ import network.ThreadPool;
 import zy.com.document.DetailOfferActivity;
 import zy.com.document.OfferActivity;
 import zy.com.document.R;
+import zy.com.document.UploadOfferActivity;
 
 /**
  * Created by zy on 16-1-2.
@@ -57,6 +58,9 @@ public class OfferFragment extends Fragment {
             OfferReword tmpOffer = (OfferReword) msg.obj;
             pullToLoadView.setComplete();
             isLoading = false;
+            if (tmpOffer != null && tmpOffer.getOffer() != null && !tmpOffer.getOffer().isEmpty()){
+                page ++;
+            }
             switch (msg.what){
                 case LOADMORE:
                     offer.appendOffer(tmpOffer);
@@ -130,7 +134,7 @@ public class OfferFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), OfferActivity.class);
+                Intent intent = new Intent(getActivity(), UploadOfferActivity.class);
                 startActivity(intent);
             }
         });

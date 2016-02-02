@@ -9,4 +9,6 @@
     <color name="colorPrimaryDark">#1976d2</color>
     <color name="colorAcent">#1976d2</color>
     <color name="white">#ffffff</color>
+
+    <color name="split_line">#50b6b0b0</color>
 </resources>

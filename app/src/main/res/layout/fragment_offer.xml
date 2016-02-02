@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="@dimen/recycle_padding"
+    android:paddingRight="@dimen/recycle_padding"
     android:orientation="vertical"
     android:background="@color/white"
     tools:context=".MainActivity">
@@ -23,6 +25,7 @@
         android:layout_marginRight="@dimen/fab_right"
         android:layout_marginBottom="@dimen/fab_bottom"
         android:scaleType="fitXY"
+        android:src="@mipmap/add"
         app:floatingActionButtonColor="@color/colorPrimary"
         app:floatingActionButtonSize="normal"
         />

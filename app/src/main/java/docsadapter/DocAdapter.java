@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import docnetwork.dataobj.Doc;
 import fileselecter.OnRecyclerItemClickListener;
+import utils.GeneralUtils;
 import zy.com.document.R;
 
 /**
@@ -36,8 +38,14 @@ public class DocAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         DocViewHolder docViewHolder = (DocViewHolder) holder;
 
+        Doc.DocMes docMes = doc.getDoc().get(position);
         docViewHolder.itemView.setTag(position);
-        docViewHolder.docNameText.setText(doc.getDoc().get(position).getTitle());
+        docViewHolder.titleText.setText(docMes.getTitle());
+        docViewHolder.contentText.setText(docMes.getContent());
+        docViewHolder.nameText.setText(docMes.getWritterName());
+        docViewHolder.timeText.setText(docMes.getTime());
+        GeneralUtils.getInstance().setHeadImg(context, docViewHolder.headImg,
+                GeneralUtils.getInstance().getFullUrl(docMes.getWritterHeadImg()));
     }
 
     @Override
@@ -59,12 +67,20 @@ public class DocAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     public class DocViewHolder extends RecyclerView.ViewHolder{
 
         public View itemView;
-        public TextView docNameText;
+        public TextView titleText;
+        public TextView contentText;
+        public TextView nameText;
+        public TextView timeText;
+        public CircleImageView headImg;
 
         public DocViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-            this.docNameText = (TextView) itemView.findViewById(R.id.text_item_doc_name);
+            this.titleText = (TextView) itemView.findViewById(R.id.text_item_doc_title);
+            this.contentText = (TextView) itemView.findViewById(R.id.text_item_doc_content);
+            this.nameText = (TextView) itemView.findViewById(R.id.text_item_writter_name);
+            this.timeText = (TextView) itemView.findViewById(R.id.text_item_time);
+            this.headImg = (CircleImageView) itemView.findViewById(R.id.img_item_writter_head);
         }
     }
 

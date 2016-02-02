@@ -33,6 +33,9 @@
             android:name=".UploadDocActivity">
         </activity>
         <activity
+            android:name=".UploadOfferActivity">
+        </activity>
+        <activity
             android:name=".OfferActivity">
         </activity>
         <activity

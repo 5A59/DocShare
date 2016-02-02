@@ -40,18 +40,9 @@ public class SelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         SelectViewHolder selectViewHolder = (SelectViewHolder) holder;
         selectViewHolder.fileNameText.setText(files.get(position).getName());
-        selectViewHolder.fileIconImg.setImageResource(R.mipmap.folder);
 
         File tmpFile = files.get(position);
-        if (tmpFile.isFile()){
-            GeneralUtils.getInstance().setIcon(context, selectViewHolder.fileIconImg, tmpFile);
-//            String postfix = GeneralUtils.getInstance().getFilePostfix(tmpFile.getName());
-//            if (GeneralUtils.getInstance().ifPic(postfix)){
-//                GeneralUtils.getInstance().setPic(context, selectViewHolder.fileIconImg, tmpFile);
-//            }else{
-//                selectViewHolder.fileIconImg.setImageResource(GeneralUtils.getInstance().getBackByPostfix(postfix));
-//            }
-        }
+        GeneralUtils.getInstance().setIcon(context, selectViewHolder.fileIconImg, tmpFile);
 
         ((SelectViewHolder) holder).itemView.setTag(position);
     }

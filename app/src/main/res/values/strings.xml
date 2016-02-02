@@ -17,4 +17,7 @@
 
     <string name="upload">上传</string>
     <string name="add_file">添加文件</string>
+
+    <string name="title">标题</string>
+    <string name="content">内容</string>
 </resources>

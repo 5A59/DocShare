@@ -6,9 +6,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -33,8 +36,7 @@ public class UploadDocActivity extends AppCompatActivity implements View.OnClick
 
     private EditText titleEdit;
     private EditText contentEdit;
-    private Button fileButton;
-    private Button uploadButton;
+    private ImageView fileImg;
     private TextView fileText;
 
     private List<File> fileList;
@@ -63,11 +65,9 @@ public class UploadDocActivity extends AppCompatActivity implements View.OnClick
 
         titleEdit = (EditText) this.findViewById(R.id.edit_title);
         contentEdit = (EditText) this.findViewById(R.id.edit_content);
-        fileButton = (Button) this.findViewById(R.id.button_add_file);
-        uploadButton = (Button) this.findViewById(R.id.button_upload);
+        fileImg = (ImageView) this.findViewById(R.id.img_add_file);
 
-        fileButton.setOnClickListener(this);
-        uploadButton.setOnClickListener(this);
+        fileImg.setOnClickListener(this);
 
         fileText = (TextView) this.findViewById(R.id.text_files);
     }
@@ -95,14 +95,28 @@ public class UploadDocActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.button_add_file:
+            case R.id.img_add_file:
                 Intent intent = new Intent(this, FileSelecterActivity.class);
                 startActivityForResult(intent, FileSelecterActivity.FILE_SELECT_RES_CODE);
                 break;
-            case R.id.button_upload:
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_upload:
                 upload();
                 break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void upload(){
