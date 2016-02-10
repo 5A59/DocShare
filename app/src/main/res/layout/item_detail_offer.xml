@@ -2,55 +2,67 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/file_padding"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/text_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textSize="20sp"
         android:minHeight="80dp"
         android:visibility="gone"/>
 
     <LinearLayout
+        android:id="@+id/layout_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/layout_item"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="@dimen/circle_img_small">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_head"
                 android:padding="2dp"
+                android:layout_centerVertical="true"
                 android:layout_width="@dimen/circle_img_small"
                 android:layout_height="@dimen/circle_img_small" />
 
             <TextView
                 android:id="@+id/text_item_name"
-                android:layout_toRightOf="@id/img_icon"
+                android:layout_toRightOf="@id/img_head"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
                 android:gravity="center"/>
 
             <TextView
                 android:id="@+id/text_item_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"/>
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center"/>
 
         </RelativeLayout>
 
         <TextView
             android:id="@+id/text_item_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"/>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_split_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:background="@color/splitLine"/>
 
 </LinearLayout>

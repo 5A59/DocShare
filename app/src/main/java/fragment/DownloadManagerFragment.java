@@ -66,14 +66,13 @@ public class DownloadManagerFragment extends Fragment{
 
     private void initData(){
         downloadMes = new ArrayList<>();
-        getDownloadData();
     }
 
     private void initView(){
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycle_download);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        downloadAdapter = new DownloadAdapter(downloadMes);
+        downloadAdapter = new DownloadAdapter(this.getActivity(), downloadMes);
         recyclerView.setAdapter(downloadAdapter);
     }
 
@@ -82,9 +81,10 @@ public class DownloadManagerFragment extends Fragment{
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                getDownloadData();
                 handler.sendEmptyMessage(UPDATE_FLAG);
             }
-        }, 0, 1000);
+        }, 100, 1000);
     }
 
     private void getDownloadData(){
@@ -94,7 +94,6 @@ public class DownloadManagerFragment extends Fragment{
     }
 
     private void updateDownload(){
-        getDownloadData();
         downloadAdapter.notifyDataSetChanged();
     }
 

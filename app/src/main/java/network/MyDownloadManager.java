@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 import docnetwork.HttpUrl;
 import network.listener.DownloadProcessListener;
+import utils.GeneralUtils;
 import utils.Logger;
 
 /**
@@ -36,6 +38,10 @@ public class MyDownloadManager {
         downloadIds = new ArrayList<>();
         downloadMesMap = new HashMap<>();
         network = Network.getInstance();
+        File pathFile = new File(GeneralUtils.getInstance().getFileSavePath());
+        if (!pathFile.exists()){
+            pathFile.mkdir();
+        }
     }
 
     public static MyDownloadManager getInstance(){
@@ -96,6 +102,14 @@ public class MyDownloadManager {
     }
 
     public void download(String url, final File toFile) {
+        if (!toFile.exists()){
+            try {
+                toFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ;
+            }
+        }
         network.downloadFile(new DownloadProcessListener() {
             @Override
             public void update(long hasRead, long length, boolean done) {

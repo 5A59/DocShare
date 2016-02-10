@@ -39,15 +39,12 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
+
         android:id="@+id/recycle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:paddingLeft="@dimen/file_padding"
-        android:paddingRight="@dimen/file_padding"
         android:fitsSystemWindows="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
     </android.support.v7.widget.RecyclerView>
 
     <!--<android.support.v4.widget.NestedScrollView-->

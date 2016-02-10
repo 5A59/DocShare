@@ -292,17 +292,24 @@ public class DocNetwork {
         return null;
     }
 
+    /**
+     *
+     * @param offerId
+     * @param content
+     * @param files
+     * @return
+     */
     public boolean answer(String offerId, String content, List<File> files){
         Map<String,String> para = new HashMap<>();
         para.put("offerId", offerId);
         para.put("content", content);
 
-        Map<String,List<File>> fileMap = new HashMap<>();
-        fileMap.put("docsadapter", files);
+//        Map<String,List<File>> fileMap = new HashMap<>();
+//        fileMap.put("files", files);
 
         Response response = null;
         try {
-            response = network.postFile(HttpUrl.uploadAnswerUrl, para, fileMap, true);
+            response = network.post(HttpUrl.uploadAnswerUrl, para);
             Res res = JsonUtil.getInstance().resParse(response.body().string());
 
             if (SuccessCheck.ifSuccess(res.getCode())){

@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="10dp"
-        android:background="@color/split_line"/>
+        android:background="@color/splitLine"/>
 
     <EditText
         android:id="@+id/edit_content"

@@ -121,9 +121,11 @@ public class MainActivity extends AppCompatActivity {
                         startOffer();
                         break;
                     case R.id.menu_my_download:
-                        startDownload();
                         break;
                     case R.id.menu_my_offer:
+                        break;
+                    case R.id.menu_trans:
+                        startDownload();
                         break;
                 }
                 closeOrOpenDrawer();

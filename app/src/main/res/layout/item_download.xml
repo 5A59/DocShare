@@ -1,18 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/file_padding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_file_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/unknow"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="15"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/file_padding"
+            android:layout_marginRight="@dimen/file_padding"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_download"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"/>
+
+            <ProgressBar
+                android:id="@+id/progress_download"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleHorizontal"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_progress_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/finish"/>
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/text_download"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
-
-    <ProgressBar
-        android:id="@+id/progress_download"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="?android:attr/progressBarStyleHorizontal"/>
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/file_padding"
+        android:background="@color/splitLine"/>
 
 </LinearLayout>
