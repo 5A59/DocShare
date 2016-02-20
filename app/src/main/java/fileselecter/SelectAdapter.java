@@ -39,7 +39,8 @@ public class SelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         SelectViewHolder selectViewHolder = (SelectViewHolder) holder;
-        selectViewHolder.fileNameText.setText(files.get(position).getName());
+        String fileName = files.get(position).getName();
+        selectViewHolder.fileNameText.setText(fileName.equals("..") ? "上一级" : fileName);
 
         File tmpFile = files.get(position);
         GeneralUtils.getInstance().setIcon(context, selectViewHolder.fileIconImg, tmpFile);

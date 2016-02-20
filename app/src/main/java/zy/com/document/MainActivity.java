@@ -3,6 +3,7 @@ package zy.com.document;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
@@ -25,7 +26,10 @@ import docnetwork.SuccessCheck;
 import docnetwork.dataobj.Info;
 import docnetwork.dataobj.Login;
 import fragment.DocsFragment;
+import fragment.DownloadFragment;
 import fragment.DownloadManagerFragment;
+import fragment.MyDocsFragment;
+import fragment.MyOfferFragment;
 import fragment.OfferFragment;
 import network.ThreadPool;
 import utils.GeneralUtils;
@@ -36,10 +40,16 @@ public class MainActivity extends AppCompatActivity {
     private static final int INFO_RES_CODE = 0;
     private static final int DOC = 0;
     private static final int OFFER = 1;
-    private static final int DOWNLOAD = 2;
+    private static final int MYDOC = 2;
+    private static final int MYOFFER = 3;
+    private static final int DOWNLOAD = 4;
+    private static final int DOWNLOAD_MANAGER = 5;
     private static final String DOC_TAG = "doc";
     private static final String OFFER_TAG = "offer";
+    private static final String MYDOC_TAG = "my_doc";
+    private static final String MYOFFER_TAG = "my_offer";
     private static final String DOWNLOAD_TAG = "download";
+    private static final String DOWNLOAD_Manager_TAG = "download_manager";
 
     private int CUR = -1;
     private int FRAGMENT_ID = 0;
@@ -48,11 +58,16 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
 
+    private TextView searchText;
+
     private TextView nameText;
     private CircleImageView headImg;
 
     private DocsFragment docsFragment;
     private OfferFragment offerFragment;
+    private MyDocsFragment myDocsFragment;
+    private MyOfferFragment myOfferFragment;
+    private DownloadFragment downloadFragment;
     private DownloadManagerFragment downloadManagerFragment;
 
     private List<Fragment> fragmentList;
@@ -120,12 +135,17 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.menu_offer:
                         startOffer();
                         break;
-                    case R.id.menu_my_download:
+                    case R.id.menu_my_doc:
+                        startMyDoc();
                         break;
                     case R.id.menu_my_offer:
+                        startMyOffer();
+                        break;
+                    case R.id.menu_download:
+                        startDownload();
                         break;
                     case R.id.menu_trans:
-                        startDownload();
+                        startDownloadManager();
                         break;
                 }
                 closeOrOpenDrawer();
@@ -137,6 +157,15 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
         toggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(toggle);
+
+        searchText = (TextView) this.findViewById(R.id.text_search);
+        searchText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //init header
         nameText = (TextView) navigationView.findViewById(R.id.text_name);
@@ -154,14 +183,22 @@ public class MainActivity extends AppCompatActivity {
     private void initFragment(){
         docsFragment = new DocsFragment();
         offerFragment = new OfferFragment();
+        myDocsFragment = new MyDocsFragment();
+        myOfferFragment = new MyOfferFragment();
+        downloadFragment = new DownloadFragment();
         downloadManagerFragment = new DownloadManagerFragment();
         fragmentList = new ArrayList<>();
-        fragmentList.add(docsFragment);
-        fragmentList.add(offerFragment);
-        fragmentList.add(downloadManagerFragment);
+//        fragmentList.add(docsFragment);
+//        fragmentList.add(offerFragment);
+//        fragmentList.add(myDocsFragment);
+//        fragmentList.add(myOfferFragment);
+//        fragmentList.add(downloadManagerFragment);
 
         addFragment(docsFragment);
         addFragment(offerFragment);
+        addFragment(myDocsFragment);
+        addFragment(myOfferFragment);
+        addFragment(downloadFragment);
         addFragment(downloadManagerFragment);
     }
 
@@ -182,12 +219,24 @@ public class MainActivity extends AppCompatActivity {
         changeFragment(DOC);
     }
 
+    private void startMyDoc(){
+        changeFragment(MYDOC);
+    }
+
     private void startOffer(){
         changeFragment(OFFER);
     }
 
+    private void startMyOffer(){
+        changeFragment(MYOFFER);
+    }
+
     private void startDownload() {
         changeFragment(DOWNLOAD);
+    }
+
+    private void startDownloadManager(){
+        changeFragment(DOWNLOAD_MANAGER);
     }
 
     private void changeFragment(int willBe){
@@ -202,8 +251,17 @@ public class MainActivity extends AppCompatActivity {
             case OFFER:
                 changeFragment(FRAGMENT_ID, offerFragment, OFFER_TAG);
                 break;
+            case MYDOC:
+                changeFragment(FRAGMENT_ID, myDocsFragment, MYDOC_TAG);
+                break;
+            case MYOFFER:
+                changeFragment(FRAGMENT_ID, myOfferFragment, MYOFFER_TAG);
+                break;
             case DOWNLOAD:
-                changeFragment(FRAGMENT_ID, downloadManagerFragment, DOWNLOAD_TAG);
+                changeFragment(FRAGMENT_ID, downloadFragment, DOWNLOAD_TAG);
+                break;
+            case DOWNLOAD_MANAGER:
+                changeFragment(FRAGMENT_ID, downloadManagerFragment, DOWNLOAD_Manager_TAG);
                 break;
         }
         CUR = willBe;
@@ -227,6 +285,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (!fragment.isAdded()){
+            fragmentList.add(fragment);
             fragmentTransaction.add(FRAGMENT_ID, fragment);
         }
         fragmentTransaction.hide(fragment);

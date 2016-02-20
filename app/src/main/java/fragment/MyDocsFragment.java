@@ -22,6 +22,7 @@ import docnetwork.dataobj.Doc;
 import docsadapter.DocAdapter;
 import fileselecter.OnRecyclerItemClickListener;
 import network.ThreadPool;
+import utils.Logger;
 import zy.com.document.DetailDocActivity;
 import zy.com.document.R;
 import zy.com.document.UploadDocActivity;
@@ -29,7 +30,7 @@ import zy.com.document.UploadDocActivity;
 /**
  * Created by zy on 16-1-2.
  */
-public class DocsFragment extends Fragment {
+public class MyDocsFragment extends Fragment {
     private final int LOADMORE = 0;
     private final int REFRESH = 1;
 
@@ -44,8 +45,6 @@ public class DocsFragment extends Fragment {
     private DocAdapter docAdapter;
     private Doc doc;
 
-    private String school;
-    private String college;
     private int page;
     private boolean isLoading;
     private boolean hasLoadAll;
@@ -72,7 +71,7 @@ public class DocsFragment extends Fragment {
         }
     };
 
-    public DocsFragment(){
+    public MyDocsFragment(){
 
     }
 
@@ -154,14 +153,12 @@ public class DocsFragment extends Fragment {
     }
 
     private void getDoc(final int what){
-        school = "大连理工大学";
-        college = "软件学院";
         isLoading = true;
 
         ThreadPool.getInstance().submit(new Runnable() {
             @Override
             public void run() {
-                Doc doc = DocNetwork.getInstance().getDoc(page, school, college, "");
+                Doc doc = DocNetwork.getInstance().getMyDoc(page);
                 handler.sendMessage(handler.obtainMessage(what, doc));
             }
         });

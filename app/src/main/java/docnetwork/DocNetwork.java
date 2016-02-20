@@ -343,10 +343,13 @@ public class DocNetwork {
         return null;
     }
 
-    public Doc getMyDownload() {
+    public Doc getMyDoc(int page) {
+        Map<String,String> para = new HashMap<>();
+        para.put("page","" + page);
+
         Response response = null;
         try{
-            response = network.get(HttpUrl.getMyDownloadUrl);
+            response = network.get(HttpUrl.getMyDocUrl, para);
             Doc doc = JsonUtil.getInstance().docParse(response.body().string());
             if (SuccessCheck.ifSuccess(doc.getCode())){
                 return doc;
@@ -357,10 +360,13 @@ public class DocNetwork {
         return new Doc();
     }
 
-    public OfferReword getMyOffer() {
+    public OfferReword getMyOffer(int page) {
+        Map<String,String> para = new HashMap<>();
+        para.put("page","" + page);
+
         Response response = null;
         try{
-            response = network.get(HttpUrl.getMyOfferUrl);
+            response = network.get(HttpUrl.getMyOfferUrl, para);
             OfferReword offer = JsonUtil.getInstance().offerParse(response.body().string());
             if (SuccessCheck.ifSuccess(offer.getCode())){
                 return offer;
@@ -370,6 +376,26 @@ public class DocNetwork {
         }
         return new OfferReword();
 
+    }
+
+    public Doc search(int page, String school, String college, String content){
+        Map<String, String> para = new HashMap<>();
+        para.put("school", school);
+        para.put("college", college);
+        para.put("content", content);
+        para.put("page", "" + page);
+
+        Response response = null;
+        try{
+            response = network.get(HttpUrl.searchUrl, para);
+            Doc doc = JsonUtil.getInstance().docParse(response.body().string());
+            if (SuccessCheck.ifSuccess(doc.getCode())){
+                return doc;
+            }
+        }catch (Exception e){
+            Logger.d("exception in search");
+        }
+        return new Doc();
     }
 
     public void downloadFile(DownloadProcessListener listener, String url, String fileName){

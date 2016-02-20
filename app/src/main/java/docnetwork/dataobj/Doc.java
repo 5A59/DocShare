@@ -51,6 +51,7 @@ public class Doc implements Serializable{
 
     public static class DocMes implements Serializable{
         private String docId;
+        private String docCode;
         private String writterName;
         private String writterNum;
         private String writterHeadImg;
@@ -58,8 +59,17 @@ public class Doc implements Serializable{
         private String content;
         private String files;
         private String time;
+
         private int like;
         private int dislike;
+
+        public String getDocCode() {
+            return docCode;
+        }
+
+        public void setDocCode(String docCode) {
+            this.docCode = docCode;
+        }
 
         public String getDocId() {
             return docId;

@@ -16,8 +16,8 @@ public class DetailDocAdapter extends DetailAdapter{
     private String content;
     private List<String> data;
 
-    public DetailDocAdapter(Context context, String content, List<String> data) {
-        super(context, content, data);
+    public DetailDocAdapter(Context context, String code, String content, List<String> data) {
+        super(context, "资料码 : " + code + " (点击复制)\n\n" + content, data);
 
         this.context = context;
         this.content = content;

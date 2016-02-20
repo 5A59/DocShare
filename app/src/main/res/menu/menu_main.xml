@@ -12,13 +12,17 @@
             android:title="@string/menu_offer"
             android:icon="@mipmap/offer"/>
 
-        <item android:id="@+id/menu_my_download"
-            android:title="@string/menu_my_download"
-            android:icon="@mipmap/my_download"/>
+        <item android:id="@+id/menu_my_doc"
+            android:title="@string/menu_my_doc"
+            android:icon="@mipmap/my_doc"/>
 
         <item android:id="@+id/menu_my_offer"
             android:title="@string/menu_my_offer"
             android:icon="@mipmap/my_offer"/>
+
+        <item android:id="@+id/menu_download"
+            android:title="@string/menu_download"
+            android:icon="@mipmap/download"/>
 
         <item android:id="@+id/menu_trans"
             android:title="@string/menu_trans"

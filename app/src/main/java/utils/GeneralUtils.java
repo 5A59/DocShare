@@ -1,12 +1,23 @@
 package utils;
 
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.input.InputManager;
+import android.net.Uri;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -45,7 +56,7 @@ public class GeneralUtils {
         Logger.d(fileName);
         Logger.d("" + sub.length);
         if (sub.length <= 1){
-            return null;
+            return "";
         }
         return sub[sub.length - 1].toUpperCase();
     }
@@ -179,5 +190,133 @@ public class GeneralUtils {
         String [] tmp = file.split("\\/");
         return tmp[tmp.length - 1];
 
+    }
+
+    public void copyToClipper(Context context, String label, String content){
+        ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData data = ClipData.newPlainText(label, content);
+        clipboardManager.setPrimaryClip(data);
+    }
+
+    public String getFromClipper(Context context){
+        ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        String data = "";
+        if (clipboardManager.hasPrimaryClip()){
+            ClipData clip =clipboardManager.getPrimaryClip();
+            data = clip.getItemAt(clip.getItemCount() - 1).coerceToText(context).toString();
+        }
+        return data;
+    }
+
+    public void myToast(Context context, String content){
+        Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
+    }
+
+    public void hideSoftInput(Activity activity){
+        ((InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    public void showSoftInput(EditText editText, Activity activity){
+        ((InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE))
+//                .showSoftInput(editText, InputMethodManager.RESULT_SHOWN);
+                .toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+    }
+
+    public String getMIME(File file){
+        String postfix = "." + getFilePostfix(file.getName()).toLowerCase();
+        String[][] mimeTable = getMIMETable();
+        for (String[] mime : mimeTable){
+            if (mime[0].equals(postfix)){
+                return mime[1];
+            }
+        }
+        return "";
+    }
+
+    public void openFile(Context context, File file){
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_VIEW);
+        String mime = getMIME(file);
+        intent.setDataAndType(Uri.fromFile(file), mime);
+        try{
+            context.startActivity(intent);
+        }catch (Exception e){
+            myToast(context, "未安装可以打开此文件的软件");
+        }
+    }
+
+    public String[][] getMIMETable(){
+        String[][] MIMEMapTable={
+                //{后缀名，MIME类型}
+                {".3gp",    "video/3gpp"},
+                {".apk",    "application/vnd.android.package-archive"},
+                {".asf",    "video/x-ms-asf"},
+                {".avi",    "video/x-msvideo"},
+                {".bin",    "application/octet-stream"},
+                {".bmp",    "image/bmp"},
+                {".c",  "text/plain"},
+                {".class",  "application/octet-stream"},
+                {".conf",   "text/plain"},
+                {".cpp",    "text/plain"},
+                {".doc",    "application/msword"},
+                {".docx",   "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
+                {".xls",    "application/vnd.ms-excel"},
+                {".xlsx",   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
+                {".exe",    "application/octet-stream"},
+                {".gif",    "image/gif"},
+                {".gtar",   "application/x-gtar"},
+                {".gz", "application/x-gzip"},
+                {".h",  "text/plain"},
+                {".htm",    "text/html"},
+                {".html",   "text/html"},
+                {".jar",    "application/java-archive"},
+                {".java",   "text/plain"},
+                {".jpeg",   "image/jpeg"},
+                {".jpg",    "image/jpeg"},
+                {".js", "application/x-javascript"},
+                {".log",    "text/plain"},
+                {".m3u",    "audio/x-mpegurl"},
+                {".m4a",    "audio/mp4a-latm"},
+                {".m4b",    "audio/mp4a-latm"},
+                {".m4p",    "audio/mp4a-latm"},
+                {".m4u",    "video/vnd.mpegurl"},
+                {".m4v",    "video/x-m4v"},
+                {".mov",    "video/quicktime"},
+                {".mp2",    "audio/x-mpeg"},
+                {".mp3",    "audio/x-mpeg"},
+                {".mp4",    "video/mp4"},
+                {".mpc",    "application/vnd.mpohun.certificate"},
+                {".mpe",    "video/mpeg"},
+                {".mpeg",   "video/mpeg"},
+                {".mpg",    "video/mpeg"},
+                {".mpg4",   "video/mp4"},
+                {".mpga",   "audio/mpeg"},
+                {".msg",    "application/vnd.ms-outlook"},
+                {".ogg",    "audio/ogg"},
+                {".pdf",    "application/pdf"},
+                {".png",    "image/png"},
+                {".pps",    "application/vnd.ms-powerpoint"},
+                {".ppt",    "application/vnd.ms-powerpoint"},
+                {".pptx",   "application/vnd.openxmlformats-officedocument.presentationml.presentation"},
+                {".prop",   "text/plain"},
+                {".rc", "text/plain"},
+                {".rmvb",   "audio/x-pn-realaudio"},
+                {".rtf",    "application/rtf"},
+                {".sh", "text/plain"},
+                {".tar",    "application/x-tar"},
+                {".tgz",    "application/x-compressed"},
+                {".txt",    "text/plain"},
+                {".wav",    "audio/x-wav"},
+                {".wma",    "audio/x-ms-wma"},
+                {".wmv",    "audio/x-ms-wmv"},
+                {".wps",    "application/vnd.ms-works"},
+                {".xml",    "text/plain"},
+                {".z",  "application/x-compress"},
+                {".zip",    "application/x-zip-compressed"},
+                {"",        "*/*"}};
+        return MIMEMapTable;
     }
 }

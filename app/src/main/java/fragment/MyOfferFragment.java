@@ -18,18 +18,18 @@ import com.srx.widget.PullCallback;
 import com.srx.widget.PullToLoadView;
 
 import docnetwork.DocNetwork;
-import docnetwork.dataobj.Doc;
-import docsadapter.DocAdapter;
+import docnetwork.dataobj.OfferReword;
+import docsadapter.OfferAdapter;
 import fileselecter.OnRecyclerItemClickListener;
 import network.ThreadPool;
-import zy.com.document.DetailDocActivity;
+import zy.com.document.DetailOfferActivity;
 import zy.com.document.R;
-import zy.com.document.UploadDocActivity;
+import zy.com.document.UploadOfferActivity;
 
 /**
  * Created by zy on 16-1-2.
  */
-public class DocsFragment extends Fragment {
+public class MyOfferFragment extends Fragment {
     private final int LOADMORE = 0;
     private final int REFRESH = 1;
 
@@ -39,10 +39,10 @@ public class DocsFragment extends Fragment {
 
     private RecyclerView.LayoutManager layoutManager;
 
-    private View rootView;
+    private OfferAdapter offerAdapter;
+    private OfferReword offer;
 
-    private DocAdapter docAdapter;
-    private Doc doc;
+    private View rootView;
 
     private String school;
     private String college;
@@ -54,25 +54,25 @@ public class DocsFragment extends Fragment {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            Doc tmpDoc = (Doc) msg.obj;
-            isLoading = false;
+            OfferReword tmpOffer = (OfferReword) msg.obj;
             pullToLoadView.setComplete();
-            if (tmpDoc != null && tmpDoc.getDoc() != null && !tmpDoc.getDoc().isEmpty()){
+            isLoading = false;
+            if (tmpOffer != null && tmpOffer.getOffer() != null && !tmpOffer.getOffer().isEmpty()){
                 page ++;
             }
             switch (msg.what){
                 case LOADMORE:
-                    doc.appendDocMes(tmpDoc);
+                    offer.appendOffer(tmpOffer);
                     break;
                 case REFRESH:
-                    doc.reAddDocMes(tmpDoc);
+                    offer.reAddOffer(tmpOffer);
                     break;
             }
-            docAdapter.notifyDataSetChanged();
+            offerAdapter.notifyDataSetChanged();
         }
     };
 
-    public DocsFragment(){
+    public MyOfferFragment(){
 
     }
 
@@ -84,7 +84,7 @@ public class DocsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_docs, null);
+        rootView = inflater.inflate(R.layout.fragment_offer, null);
         return rootView;
     }
 
@@ -96,7 +96,7 @@ public class DocsFragment extends Fragment {
     }
 
     private void initData(){
-        doc = new Doc();
+        offer = new OfferReword();
         page = 1;
         isLoading = false;
         hasLoadAll = false;
@@ -133,47 +133,45 @@ public class DocsFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UploadDocActivity.class);
+                Intent intent = new Intent(getActivity(), UploadOfferActivity.class);
                 startActivity(intent);
             }
         });
-        docAdapter = new DocAdapter(this.getActivity(), doc);
-        docAdapter.setItemClickListener(new OnRecyclerItemClickListener() {
+        offerAdapter = new OfferAdapter(this.getActivity(), offer);
+        offerAdapter.setItemClickListener(new OnRecyclerItemClickListener() {
             @Override
             public void onClick(View v, int pos) {
-                Intent intent = new Intent(getActivity(), DetailDocActivity.class);
-                intent.putExtra("doc", doc.getDoc().get(pos));
+                Intent intent = new Intent(getActivity(), DetailOfferActivity.class);
+                intent.putExtra("offer", offer.getOffer().get(pos));
                 startActivity(intent);
             }
         });
 
         layoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(docAdapter);
+        recyclerView.setAdapter(offerAdapter);
         recyclerView.setOnTouchListener(new ShowHideOnScroll(floatingActionButton));
     }
 
-    private void getDoc(final int what){
-        school = "大连理工大学";
-        college = "软件学院";
+    private void getOffer(final int what){
         isLoading = true;
 
         ThreadPool.getInstance().submit(new Runnable() {
             @Override
             public void run() {
-                Doc doc = DocNetwork.getInstance().getDoc(page, school, college, "");
-                handler.sendMessage(handler.obtainMessage(what, doc));
+                OfferReword offer = DocNetwork.getInstance().getMyOffer(page);
+                handler.sendMessage(handler.obtainMessage(what, offer));
             }
         });
 
     }
 
     private void loadMore(){
-        getDoc(0);
+        getOffer(0);
     }
 
     private void refresh(){
         page = 1;
-        getDoc(1);
+        getOffer(1);
     }
 }

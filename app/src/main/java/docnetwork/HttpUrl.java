@@ -17,6 +17,7 @@ public class HttpUrl {
     public static final String getOfferUrl = mainUrl + "/getOffer/";
     public static final String uploadAnswerUrl = mainUrl + "/uploadAnswer/";
     public static final String getAnswerUrl = mainUrl + "/getAnswer/";
-    public static final String getMyDownloadUrl = mainUrl + "/getMyDownload/";
+    public static final String getMyDocUrl= mainUrl + "/getMyDoc/";
     public static final String getMyOfferUrl = mainUrl + "/getMyOffer/";
+    public static final String searchUrl = mainUrl + "/search/";
 }

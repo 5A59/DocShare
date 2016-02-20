@@ -11,8 +11,9 @@
 
     <string name="menu_doc">资料</string>
     <string name="menu_offer">悬赏</string>
-    <string name="menu_my_download">我的下载</string>
+    <string name="menu_my_doc">我的资料</string>
     <string name="menu_my_offer">我的悬赏</string>
+    <string name="menu_download">已下载</string>
     <string name="menu_trans">传输列表</string>
 
     <string name="upload">上传</string>
@@ -22,4 +23,6 @@
     <string name="content">内容</string>
 
     <string name="send">发送</string>
+    <string name="no_res">无结果，试试其他关键字　或者　换学校试试 或者　直接搜资料码 或者　你自己想办法</string>
+    <string name="search">搜索资料</string>
 </resources>

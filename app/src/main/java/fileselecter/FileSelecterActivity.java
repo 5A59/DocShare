@@ -122,6 +122,7 @@ public class FileSelecterActivity extends Activity implements View.OnClickListen
                     }
                     pathStack.pop();
                 }
+                //TODO : 有个bug, 在选择文件界面一进去点上面path路径的0会奔溃，栈空错误
                 getSubFiles(pathStack.peek());
                 changePath();
             }

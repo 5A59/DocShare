@@ -89,17 +89,32 @@ public class DetailDocActivity extends AppCompatActivity{
         recyclerView = (RecyclerView) this.findViewById(R.id.recycle);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new DetailDocAdapter(this, docMes.getContent(), files);
+        adapter = new DetailDocAdapter(this, docMes.getDocCode(), docMes.getContent(), files);
         adapter.setItemClickListener(new OnRecyclerItemClickListener() {
             @Override
             public void onClick(View v, int pos) {
-                downloadFile(pos);
+                if (pos == -1){
+                    GeneralUtils.getInstance().copyToClipper(DetailDocActivity.this, "docCode", docMes.getDocCode());
+                    GeneralUtils.getInstance().myToast(DetailDocActivity.this, "复制成功");
+                }else {
+                    downloadFile(pos);
+                }
             }
         });
         recyclerView.setAdapter(adapter);
     }
 
     private void downloadFile(final int pos){
+        File mainPathFile = new File(GeneralUtils.getInstance().getFileSavePath());
+        if (!mainPathFile.exists()){
+            mainPathFile.mkdir();
+        }
+        final File pathFile = new File(GeneralUtils.getInstance().getFileSavePath() + "/"
+                + docMes.getTitle() + "_" + docMes.getWritterName());
+        if (!pathFile.exists()){
+            pathFile.mkdir();
+        }
+
         final String fileUrl = HttpUrl.mainUrl + files.get(pos);
         String[] fileNames = files.get(pos).split("/");
         final String fileName = fileNames[fileNames.length - 1];
@@ -107,7 +122,8 @@ public class DetailDocActivity extends AppCompatActivity{
             @Override
             public void run() {
                 Logger.d("start download");
-                File toFile = new File(GeneralUtils.getInstance().getFileSavePath() + "/" + fileName);
+//                File toFile = new File(GeneralUtils.getInstance().getFileSavePath() + "/" + fileName);
+                File toFile = new File(pathFile.getPath() + "/" + fileName);
                 MyDownloadManager.getInstance().download(fileUrl, toFile);
             }
         });
