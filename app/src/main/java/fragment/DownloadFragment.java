@@ -1,8 +1,8 @@
 package fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,7 +23,7 @@ import zy.com.document.R;
 /**
  * Created by zy on 16-2-20.
  */
-public class DownloadFragment extends Fragment{
+public class DownloadFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private SelectAdapter selectAdapter;

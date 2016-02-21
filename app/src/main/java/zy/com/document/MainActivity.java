@@ -1,12 +1,12 @@
 package zy.com.document;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +31,7 @@ import fragment.DownloadManagerFragment;
 import fragment.MyDocsFragment;
 import fragment.MyOfferFragment;
 import fragment.OfferFragment;
+import fragment.TranslateFragment;
 import network.ThreadPool;
 import utils.GeneralUtils;
 import utils.Logger;
@@ -43,12 +44,14 @@ public class MainActivity extends AppCompatActivity {
     private static final int MYDOC = 2;
     private static final int MYOFFER = 3;
     private static final int DOWNLOAD = 4;
+    private static final int TRANSLATE = 5;
     private static final int DOWNLOAD_MANAGER = 5;
     private static final String DOC_TAG = "doc";
     private static final String OFFER_TAG = "offer";
     private static final String MYDOC_TAG = "my_doc";
     private static final String MYOFFER_TAG = "my_offer";
     private static final String DOWNLOAD_TAG = "download";
+    private static final String TRANSLATE_TAG = "translate";
     private static final String DOWNLOAD_Manager_TAG = "download_manager";
 
     private int CUR = -1;
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private MyDocsFragment myDocsFragment;
     private MyOfferFragment myOfferFragment;
     private DownloadFragment downloadFragment;
+    private TranslateFragment translateFragment;
     private DownloadManagerFragment downloadManagerFragment;
 
     private List<Fragment> fragmentList;
@@ -145,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
                         startDownload();
                         break;
                     case R.id.menu_trans:
-                        startDownloadManager();
+                        startTranslate();
+//                        startDownloadManager();
                         break;
                 }
                 closeOrOpenDrawer();
@@ -186,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         myDocsFragment = new MyDocsFragment();
         myOfferFragment = new MyOfferFragment();
         downloadFragment = new DownloadFragment();
+        translateFragment = new TranslateFragment();
         downloadManagerFragment = new DownloadManagerFragment();
         fragmentList = new ArrayList<>();
 //        fragmentList.add(docsFragment);
@@ -199,7 +205,8 @@ public class MainActivity extends AppCompatActivity {
         addFragment(myDocsFragment);
         addFragment(myOfferFragment);
         addFragment(downloadFragment);
-        addFragment(downloadManagerFragment);
+        addFragment(translateFragment);
+//        addFragment(downloadManagerFragment);
     }
 
     private void setHeader(Info info){
@@ -235,6 +242,10 @@ public class MainActivity extends AppCompatActivity {
         changeFragment(DOWNLOAD);
     }
 
+    private void startTranslate(){
+        changeFragment(TRANSLATE);
+    }
+
     private void startDownloadManager(){
         changeFragment(DOWNLOAD_MANAGER);
     }
@@ -260,15 +271,16 @@ public class MainActivity extends AppCompatActivity {
             case DOWNLOAD:
                 changeFragment(FRAGMENT_ID, downloadFragment, DOWNLOAD_TAG);
                 break;
-            case DOWNLOAD_MANAGER:
-                changeFragment(FRAGMENT_ID, downloadManagerFragment, DOWNLOAD_Manager_TAG);
+            case TRANSLATE:
+                changeFragment(FRAGMENT_ID, translateFragment, TRANSLATE_TAG);
                 break;
         }
         CUR = willBe;
     }
 
     private void changeFragment(int id, Fragment fragment, String tag){
-        FragmentManager fragmentManager = getFragmentManager();
+//        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         for (Fragment f : fragmentList){
@@ -282,7 +294,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addFragment(Fragment fragment){
-        FragmentManager fragmentManager = getFragmentManager();
+//        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (!fragment.isAdded()){
             fragmentList.add(fragment);

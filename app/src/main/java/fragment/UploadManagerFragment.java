@@ -24,7 +24,7 @@ import zy.com.document.R;
 /**
  * Created by zy on 16-1-20.
  */
-public class DownloadManagerFragment extends Fragment {
+public class UploadManagerFragment extends Fragment {
     private static final int UPDATE_FLAG = 0;
 
     private DownloadAdapter downloadAdapter;
@@ -45,7 +45,7 @@ public class DownloadManagerFragment extends Fragment {
         }
     };
 
-    public DownloadManagerFragment(){
+    public UploadManagerFragment(){
 
     }
 
