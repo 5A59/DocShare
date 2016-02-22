@@ -399,10 +399,17 @@ public class Network {
 
         Set<String> key = files.keySet();
         for (String k : key){
-            for (File f : files.get(k)){
-                if (listeners == null){
+            for (final File f : files.get(k)){
+                if (listeners == null || listeners.isEmpty()){
+//                    fileBuilder.addFormDataPart(k, f.getName(),
+//                            RequestBody.create(null, f));
                     fileBuilder.addFormDataPart(k, f.getName(),
-                            RequestBody.create(null, f));
+                            new ProgressRequestBody(null, f, new UploadProcessListener() {
+                                @Override
+                                public void update(long hasWrite, long length, boolean done) {
+                                    MyUploadManager.getInstance().updateUploadMes(f, hasWrite, length);
+                                }
+                            }));
                 }else {
                     fileBuilder.addFormDataPart(k, f.getName(),
                             new ProgressRequestBody(null, f, listeners.get(f.getAbsolutePath())));

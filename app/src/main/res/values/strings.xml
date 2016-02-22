@@ -27,4 +27,16 @@
     <string name="search">搜索资料</string>
 
     <string name="download">下载</string>
+
+    <string name="settings">设置</string>
+    <string name="head_img">头像</string>
+    <string name="nick_name">昵称</string>
+    <string name="school">学校</string>
+    <string name="college">专业</string>
+    <string name="bound_mobile">绑定手机号</string>
+    <string name="un_bound_mobile">解绑手机号</string>
+    <string name="mobile_login">手机号登陆</string>
+
+    <string name="upload_headimg_success">上传头像成功</string>
+    <string name="upload_headimg_fail">上传头像失败</string>
 </resources>

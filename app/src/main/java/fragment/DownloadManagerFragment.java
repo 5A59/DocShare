@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import docsadapter.DownloadAdapter;
-import network.DownloadMes;
+import docsadapter.LoadingAdapter;
+import network.LoadingMes;
 import network.MyDownloadManager;
 import zy.com.document.R;
 
@@ -27,10 +27,10 @@ import zy.com.document.R;
 public class DownloadManagerFragment extends Fragment {
     private static final int UPDATE_FLAG = 0;
 
-    private DownloadAdapter downloadAdapter;
+    private LoadingAdapter loadingAdapter;
     private RecyclerView recyclerView;
 
-    private List<DownloadMes> downloadMes;
+    private List<LoadingMes> loadingMes;
 
     private View rootView;
 
@@ -65,15 +65,15 @@ public class DownloadManagerFragment extends Fragment {
     }
 
     private void initData(){
-        downloadMes = new ArrayList<>();
+        loadingMes = new ArrayList<>();
     }
 
     private void initView(){
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycle_download);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        downloadAdapter = new DownloadAdapter(this.getActivity(), downloadMes);
-        recyclerView.setAdapter(downloadAdapter);
+        loadingAdapter = new LoadingAdapter(this.getActivity(), loadingMes);
+        recyclerView.setAdapter(loadingAdapter);
     }
 
     private void initUpdate(){
@@ -88,13 +88,13 @@ public class DownloadManagerFragment extends Fragment {
     }
 
     private void getDownloadData(){
-        downloadMes.clear();
-//        downloadMes.addAll(MyDownloadManager.getInstance().getSysDownMes(this.getActivity()));
-        downloadMes.addAll(MyDownloadManager.getInstance().getDownMes());
+        loadingMes.clear();
+//        loadingMes.addAll(MyDownloadManager.getInstance().getSysDownMes(this.getActivity()));
+        loadingMes.addAll(MyDownloadManager.getInstance().getDownMes());
     }
 
     private void updateDownload(){
-        downloadAdapter.notifyDataSetChanged();
+        loadingAdapter.notifyDataSetChanged();
     }
 
     @Override

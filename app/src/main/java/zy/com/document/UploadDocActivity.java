@@ -129,18 +129,8 @@ public class UploadDocActivity extends AppCompatActivity implements View.OnClick
         ThreadPool.getInstance().submit(new Runnable() {
             @Override
             public void run() {
-                Map<String, UploadProcessListener> listenerMap = new HashMap<>();
-                for (final File f : fileList){
-                    listenerMap.put(f.getAbsolutePath(), new UploadProcessListener() {
-                        @Override
-                        public void update(long hasWrite, long length, boolean done) {
-//                            Logger.d("upload file  " + f.getAbsolutePath() + "  haswrite " + hasWrite + " length" + length);
-                        }
-                    });
-                }
                 boolean res = DocNetwork.getInstance()
-                        .uploadDoc(title, content, school, college, subject, fileList, listenerMap);
-                Logger.d("uuuuuuu " + res);
+                        .uploadDoc(title, content, school, college, subject, fileList, null);
                 handler.sendMessage(handler.obtainMessage(UPLOAD_RES_CODE, res));
             }
         });

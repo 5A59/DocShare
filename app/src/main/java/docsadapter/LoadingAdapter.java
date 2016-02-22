@@ -12,22 +12,21 @@ import android.widget.TextView;
 import java.util.List;
 
 import fileselecter.OnRecyclerItemClickListener;
-import network.DownloadMes;
+import network.LoadingMes;
 import utils.GeneralUtils;
-import utils.Logger;
 import zy.com.document.R;
 
 /**
  * Created by zy on 16-1-20.
  */
-public class DownloadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener{
+public class LoadingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener{
 
     private Context context;
-    private List<DownloadMes> downloadMes;
+    private List<LoadingMes> loadingMes;
     private OnRecyclerItemClickListener listener;
 
-    public DownloadAdapter(Context context, List<DownloadMes> downloadMes){
-        this.downloadMes = downloadMes;
+    public LoadingAdapter(Context context, List<LoadingMes> loadingMes){
+        this.loadingMes = loadingMes;
         this.context = context;
     }
 
@@ -35,30 +34,32 @@ public class DownloadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_download, parent, false);
         view.setOnClickListener(this);
-        return new DownloadViewHolder(view);
+        return new LoadingViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        DownloadViewHolder viewHolder = (DownloadViewHolder) holder;
+        LoadingViewHolder viewHolder = (LoadingViewHolder) holder;
         holder.itemView.setTag(position);
-        DownloadMes mes = downloadMes.get(position);
-        viewHolder.filaNameText.setText(mes.getFileName());
+        LoadingMes mes = loadingMes.get(position);
+        viewHolder.filaNameText.setText(mes.getSymbol());
         viewHolder.progressBar.setMax((int) mes.getAllLength());
         viewHolder.progressBar.setProgress((int) mes.getCurLength());
         if (mes.getCurLength() >= mes.getAllLength()){
             GeneralUtils.getInstance().setPic(context, viewHolder.progressImg,
                     R.mipmap.finish, R.mipmap.finish, R.mipmap.finish);
+            viewHolder.progressBar.setMax(1);
+            viewHolder.progressBar.setProgress(1);
         }else {
             GeneralUtils.getInstance().setPic(context, viewHolder.progressImg,
                     R.mipmap.loading, R.mipmap.loading, R.mipmap.loading);
         }
-        GeneralUtils.getInstance().setIcon(context, viewHolder.iconImg, mes.getFileName());
+        GeneralUtils.getInstance().setIcon(context, viewHolder.iconImg, mes.getSymbol());
     }
 
     @Override
     public int getItemCount() {
-        return downloadMes.size();
+        return loadingMes.size();
     }
 
     @Override
@@ -72,7 +73,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.listener = listener;
     }
 
-    public class DownloadViewHolder extends RecyclerView.ViewHolder{
+    public class LoadingViewHolder extends RecyclerView.ViewHolder{
 
         public View itemView;
         public TextView filaNameText;
@@ -80,7 +81,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public ImageView progressImg;
         public ImageView iconImg;
 
-        public DownloadViewHolder(View itemView) {
+        public LoadingViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             this.filaNameText = (TextView) itemView.findViewById(R.id.text_download);

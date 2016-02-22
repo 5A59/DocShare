@@ -177,7 +177,7 @@ public class SearchActivity extends AppCompatActivity{
 
     private void setClipper(){
         String data = GeneralUtils.getInstance().getFromClipper(this);
-        Pattern pattern = Pattern.compile("[0-9]*");
+        Pattern pattern = Pattern.compile("[0-9]{4}[0-9]*");
         Matcher matcher = pattern.matcher(data);
         if (matcher.matches()){
             searchEdit.setText(data);

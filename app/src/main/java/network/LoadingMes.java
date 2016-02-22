@@ -3,11 +3,11 @@ package network;
 /**
  * Created by zy on 16-1-20.
  */
-public class DownloadMes {
+public class LoadingMes {
     private long allLength;
     private long curLength;
 
-    private String fileName;
+    private String symbol;
     private String hashCode;
 
     public long getAllLength() {
@@ -30,17 +30,17 @@ public class DownloadMes {
         return curLength >= allLength;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
     public String getHashCode() {
         if (hashCode == null || hashCode.isEmpty()){
-            return fileName;
+            return symbol;
         }
         return hashCode;
     }

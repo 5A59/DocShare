@@ -37,7 +37,9 @@ import utils.GeneralUtils;
 import utils.Logger;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String LOGIN_MES = "login";
 
+    private static final int SETTING_CODE = 0;
     private static final int INFO_RES_CODE = 0;
     private static final int DOC = 0;
     private static final int OFFER = 1;
@@ -52,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String MYOFFER_TAG = "my_offer";
     private static final String DOWNLOAD_TAG = "download";
     private static final String TRANSLATE_TAG = "translate";
-    private static final String DOWNLOAD_Manager_TAG = "download_manager";
 
     private int CUR = -1;
     private int FRAGMENT_ID = 0;
@@ -72,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
     private MyOfferFragment myOfferFragment;
     private DownloadFragment downloadFragment;
     private TranslateFragment translateFragment;
-    private DownloadManagerFragment downloadManagerFragment;
 
     private List<Fragment> fragmentList;
 
@@ -82,7 +82,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == INFO_RES_CODE){
-                HttpData.info = (Info) msg.obj;
+                Info i = (Info) msg.obj;
+                HttpData.info.setCode(i.getCode());
+                HttpData.info.setInf(i.getInf());
+//                HttpData.info = (Info) msg.obj;
                 setHeader(HttpData.info);
             }
         }
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initData(){
         FRAGMENT_ID = R.id.fragment;
-        loginMes = (Login) getIntent().getSerializableExtra("login");
+        loginMes = (Login) getIntent().getSerializableExtra(LOGIN_MES);
     }
 
     private void initView(){
@@ -175,6 +178,13 @@ public class MainActivity extends AppCompatActivity {
         //init header
         nameText = (TextView) navigationView.findViewById(R.id.text_name);
         headImg = (CircleImageView) navigationView.findViewById(R.id.img_head);
+        headImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivityForResult(intent, SETTING_CODE);
+            }
+        });
 
         startDoc();
     }
@@ -192,13 +202,7 @@ public class MainActivity extends AppCompatActivity {
         myOfferFragment = new MyOfferFragment();
         downloadFragment = new DownloadFragment();
         translateFragment = new TranslateFragment();
-        downloadManagerFragment = new DownloadManagerFragment();
         fragmentList = new ArrayList<>();
-//        fragmentList.add(docsFragment);
-//        fragmentList.add(offerFragment);
-//        fragmentList.add(myDocsFragment);
-//        fragmentList.add(myOfferFragment);
-//        fragmentList.add(downloadManagerFragment);
 
         addFragment(docsFragment);
         addFragment(offerFragment);
@@ -206,7 +210,6 @@ public class MainActivity extends AppCompatActivity {
         addFragment(myOfferFragment);
         addFragment(downloadFragment);
         addFragment(translateFragment);
-//        addFragment(downloadManagerFragment);
     }
 
     private void setHeader(Info info){
@@ -322,5 +325,22 @@ public class MainActivity extends AppCompatActivity {
             return ;
         }
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != RESULT_OK){
+            return ;
+        }
+
+        if (requestCode == SETTING_CODE){
+            boolean res = data.getExtras().getBoolean(SettingActivity.UPLOAD_HEADIMG_RES_TAG);
+            if (res){
+                getInfo();
+            }
+        }
+
     }
 }

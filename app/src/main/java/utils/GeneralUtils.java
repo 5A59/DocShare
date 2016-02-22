@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.input.InputManager;
@@ -155,6 +156,20 @@ public class GeneralUtils {
         setPic(context, view, url, R.mipmap.def_headimg, R.mipmap.def_headimg);
     }
 
+    public void setHeadImg(Context context, ImageView view, File file){
+        setPic(context, view, file);
+    }
+
+    public void setHeadImg(Context context, ImageView view, Bitmap bitmap){
+        setPic(context, view, bitmap, R.mipmap.def_headimg, R.mipmap.def_headimg);
+    }
+
+    public void setPic(Context context, ImageView view, File file){
+        Glide.with(context)
+                .load(file)
+                .into(view);
+    }
+
     public void setPic(Context context, ImageView view, String uri, int errid, int loading){
         Glide.with(context)
                 .load(uri)
@@ -167,6 +182,14 @@ public class GeneralUtils {
     public void setPic(Context context, ImageView view, int id, int errid, int loading){
         Glide.with(context)
                 .load(id)
+                .error(errid)
+                .placeholder(loading)
+                .into(view);
+    }
+
+    public void setPic(Context context, ImageView view, Bitmap bitmap, int errid, int loading){
+        Glide.with(context)
+                .load(bitmap)
                 .error(errid)
                 .placeholder(loading)
                 .into(view);

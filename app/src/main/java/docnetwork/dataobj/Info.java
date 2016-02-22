@@ -33,6 +33,15 @@ public class Info implements Serializable{
         private String school;
         private String college;
         private String headImg;
+        private String mobile;
+
+        public String getMobile() {
+            return mobile;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
+        }
 
         public String getName() {
             return name;

@@ -11,9 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 import docnetwork.dataobj.Answer;
+import docnetwork.dataobj.CollegeRes;
 import docnetwork.dataobj.Doc;
 import docnetwork.dataobj.DocCom;
 import docnetwork.dataobj.OfferReword;
+import docnetwork.dataobj.SchoolRes;
+import network.MyUploadManager;
 import network.listener.DownloadProcessListener;
 import network.Network;
 import docnetwork.dataobj.Info;
@@ -74,7 +77,7 @@ public class DocNetwork {
             e.printStackTrace();
             Logger.d("login exception");
         }
-        return null;
+        return new Login();
     }
 
     public Register register(String username,String password){
@@ -97,6 +100,67 @@ public class DocNetwork {
             Logger.d("register exception");
         }
         return null;
+    }
+
+    public Login noBoundLogin(String username){
+        Map<String,String> para = new HashMap<>();
+        para.put("username",username);
+        Response response = null;
+        try {
+            response = network.post(HttpUrl.noBoundLoginUrl, para);
+            Login l = JsonUtil.getInstance().loginParse(response.body().string());
+
+            if (SuccessCheck.ifSuccess(l.getCode())){
+                UserData.userNum = l.getUserNum();
+                Logger.d("login success usernum is " + UserData.userNum);
+                return l;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Logger.d("no bound login exception");
+        }
+        return new Login();
+    }
+
+    public boolean boundMobile(String userNum, String mobile){
+        Map<String,String> para = new HashMap<>();
+        para.put("userNum",userNum);
+        para.put("mobile",mobile);
+        Response response = null;
+        try {
+            response = network.post(HttpUrl.boundMobile, para);
+            Res res = JsonUtil.getInstance().resParse(response.body().string());
+
+            if (SuccessCheck.ifSuccess(res.getCode())){
+                return true;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Logger.d("bound mobile exception");
+        }
+        return false;
+    }
+
+    public boolean unBoundMobile(String userNum, String mobile){
+        Map<String,String> para = new HashMap<>();
+        para.put("userNum",userNum);
+        para.put("mobile",mobile);
+        Response response = null;
+        try {
+            response = network.post(HttpUrl.unBoundMobile, para);
+            Res res = JsonUtil.getInstance().resParse(response.body().string());
+
+            if (SuccessCheck.ifSuccess(res.getCode())){
+                return true;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Logger.d("bound mobile exception");
+        }
+        return false;
     }
 
     public Info info(String userNum){
@@ -144,7 +208,16 @@ public class DocNetwork {
 
     public boolean uploadDoc(String title, String content, String school, String college,
                              String subject, List<File> files){
-        return uploadDoc(title, content, school, college, subject, files, null);
+        Map<String, UploadProcessListener> listener = new HashMap<>();
+        for (final File f : files){
+            listener.put(f.getAbsolutePath(), new UploadProcessListener() {
+                @Override
+                public void update(long hasWrite, long length, boolean done) {
+                    MyUploadManager.getInstance().updateUploadMes(f, hasWrite, length);
+                }
+            });
+        }
+        return uploadDoc(title, content, school, college, subject, files, listener);
     }
 
     public boolean uploadDoc(String title, String content, String school, String college,
@@ -162,11 +235,11 @@ public class DocNetwork {
 
         Response response = null;
         try {
-            if (listener == null){
-                response = network.postFile(HttpUrl.uploadDocUrl, para, fileMap, true);
-            }else {
-                response = network.postFile(HttpUrl.uploadDocUrl, para, fileMap, listener);
-            }
+//            if (listener == null){
+//                response = network.postFile(HttpUrl.uploadDocUrl, para, fileMap, true);
+//            }else {
+            response = network.postFile(HttpUrl.uploadDocUrl, para, fileMap, listener);
+//            }
 
             Res res = JsonUtil.getInstance().resParse(response.body().string());
 
@@ -396,6 +469,37 @@ public class DocNetwork {
             Logger.d("exception in search");
         }
         return new Doc();
+    }
+
+    public SchoolRes getSchool(){
+        Response response = null;
+        try{
+            response = network.get(HttpUrl.getSchoolUrl);
+            SchoolRes res = JsonUtil.getInstance().schoolResParse(response.body().string());
+            if (SuccessCheck.ifSuccess(res.getCode())){
+                return res;
+            }
+        }catch (Exception e){
+            Logger.d("exception in get school");
+        }
+        return new SchoolRes();
+    }
+
+    public CollegeRes getCollege(int schId){
+        Response response = null;
+        Map<String, String> para = new HashMap<>();
+        para.put("schId", "" + schId);
+        try {
+            response = network.get(HttpUrl.getCollegeUrl, para);
+            CollegeRes res = JsonUtil.getInstance().collegeResParse(response.body().string());
+            if (SuccessCheck.ifSuccess(res.getCode())){
+                return res;
+            }
+        }catch (Exception e){
+            Logger.d("exception in get college");
+        }
+
+        return new CollegeRes();
     }
 
     public void downloadFile(DownloadProcessListener listener, String url, String fileName){

@@ -13,10 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import docnetwork.HttpUrl;
 import network.listener.DownloadProcessListener;
 import utils.GeneralUtils;
-import utils.Logger;
 
 /**
  * Created by zy on 16-1-20.
@@ -26,7 +24,7 @@ public class MyDownloadManager {
     private Network network;
     private static MyDownloadManager myDownloadManager = null;
     private List<Long> downloadIds;
-    private Map<String, DownloadMes> downloadMesMap;
+    private Map<String, LoadingMes> downloadMesMap;
 
     private synchronized static void syncInit(){
         if (myDownloadManager == null){
@@ -67,8 +65,8 @@ public class MyDownloadManager {
         return downloadIds;
     }
 
-    public DownloadMes getSysDownMesById(Context context, Long id){
-        DownloadMes mes = new DownloadMes();
+    public LoadingMes getSysDownMesById(Context context, Long id){
+        LoadingMes mes = new LoadingMes();
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 
         DownloadManager.Query query = new DownloadManager.Query();
@@ -82,7 +80,7 @@ public class MyDownloadManager {
 
             mes.setAllLength(cursor.getInt(totalIndex));
             mes.setCurLength(cursor.getInt(downloadedIndex));
-            mes.setFileName(cursor.getString(filaNameIndex));
+            mes.setSymbol(cursor.getString(filaNameIndex));
         }
         if (!cursor.isClosed()){
             cursor.close();
@@ -91,10 +89,10 @@ public class MyDownloadManager {
         return mes;
     }
 
-    public List<DownloadMes> getSysDownMes(Context context){
-        List<DownloadMes> res = new ArrayList<>();
+    public List<LoadingMes> getSysDownMes(Context context){
+        List<LoadingMes> res = new ArrayList<>();
         for (Long id : downloadIds){
-            DownloadMes mes = getSysDownMesById(context, id);
+            LoadingMes mes = getSysDownMesById(context, id);
             res.add(mes);
         }
 
@@ -121,22 +119,22 @@ public class MyDownloadManager {
     }
 
     private void addDownloadMes(File toFile, long curLength, long allLength){
-        DownloadMes downloadMes = new DownloadMes();
-        downloadMes.setCurLength(curLength);
-        downloadMes.setAllLength(allLength);
-        downloadMes.setFileName(toFile.getName());
-        downloadMesMap.put(getFileHashCode(toFile), downloadMes);
+        LoadingMes loadingMes = new LoadingMes();
+        loadingMes.setCurLength(curLength);
+        loadingMes.setAllLength(allLength);
+        loadingMes.setSymbol(toFile.getName());
+        downloadMesMap.put(getFileHashCode(toFile), loadingMes);
     }
 
     private void updateDownloadMes(String hashCode, long curLength, long allLength) {
         if (downloadMesMap.containsKey(hashCode)){
-            DownloadMes downloadMes = downloadMesMap.get(hashCode);
-            downloadMes.setCurLength(curLength);
-            downloadMes.setAllLength(allLength);
+            LoadingMes loadingMes = downloadMesMap.get(hashCode);
+            loadingMes.setCurLength(curLength);
+            loadingMes.setAllLength(allLength);
         }
     }
 
-    public Collection<DownloadMes> getDownMes() {
+    public Collection<LoadingMes> getDownMes() {
 
         return downloadMesMap.values();
     }

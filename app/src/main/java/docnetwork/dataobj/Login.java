@@ -10,6 +10,10 @@ public class Login implements Serializable{
     private String code;
     private String userNum;
 
+    public Login(){
+        code = "fail";
+        userNum = "";
+    }
 
     public String getCode() {
         return code;
