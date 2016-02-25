@@ -1,6 +1,7 @@
 package zy.com.document;
 
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -8,14 +9,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.HashMap;
 
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
+import cn.smssdk.gui.RegisterPage;
 import de.hdodenhof.circleimageview.CircleImageView;
 import docnetwork.DocNetwork;
 import docnetwork.HttpData;
@@ -23,6 +30,7 @@ import docnetwork.dataobj.Info;
 import network.ThreadPool;
 import utils.GeneralUtils;
 import utils.Logger;
+import utils.MyPreference;
 
 /**
  * Created by zy on 16-2-21.
@@ -30,9 +38,13 @@ import utils.Logger;
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener{
     public static final int ALBUM_CODE = 0;
     public static final int UPLOAD_HEADIMG_CODE = 1;
+    public static final int UPLOAD_NAME_CODE = 2;
+    public static final int BOUND_MOBILE_CODE = 3;
     public static final String ALBUM_TAG = "select from album";
     public static final String UPLOAD_HEADIMG_RES_TAG = "res";
     public static final String UPLOAD_HEADIMG_PATH_TAG = "path";
+    public static final String UPLOAD_NAME_TAG = "name";
+    public static final String BOUND_MOBILE_TAG = "mobile";
 
     private Toolbar toolbar;
 
@@ -54,8 +66,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            Bundle bundle = (Bundle) msg.obj;
             if (msg.what == UPLOAD_HEADIMG_CODE){
-                Bundle bundle = (Bundle) msg.obj;
                 if (bundle.getBoolean(UPLOAD_HEADIMG_RES_TAG)){
                     ifChangeInfo = true;
                     GeneralUtils.getInstance().myToast(SettingActivity.this,
@@ -65,6 +77,28 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 }else {
                     GeneralUtils.getInstance().myToast(SettingActivity.this,
                             getResources().getString(R.string.upload_headimg_fail));
+                }
+            }else if (msg.what == UPLOAD_NAME_CODE){
+                if (bundle.getBoolean(UPLOAD_HEADIMG_RES_TAG)){
+                    ifChangeInfo = true;
+                    nameText.setText(bundle.getString(UPLOAD_NAME_TAG));
+                    GeneralUtils.getInstance().myToast(SettingActivity.this,
+                            getResources().getString(R.string.upload_name_success));
+                }else {
+                    GeneralUtils.getInstance().myToast(SettingActivity.this,
+                            getResources().getString(R.string.upload_name_fail));
+                }
+            }else if (msg.what == BOUND_MOBILE_CODE){
+                if (bundle.getBoolean(UPLOAD_HEADIMG_RES_TAG)){
+                    ifChangeInfo = true;
+                    mobileText.setText(bundle.getString(BOUND_MOBILE_TAG));
+                    mobileTitleText.setText(getResources().getString(R.string.un_bound_mobile));
+                    GeneralUtils.getInstance().myToast(SettingActivity.this,
+                            getResources().getString(R.string.bound_mobile_success));
+                    MyPreference.getInstance().setBound(SettingActivity.this, true);
+                }else {
+                    GeneralUtils.getInstance().myToast(SettingActivity.this,
+                            getResources().getString(R.string.bound_mobile_fail));
                 }
             }
         }
@@ -138,12 +172,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 addHeadImg();
                 break;
             case R.id.layout_name:
+                setNickName();
                 break;
             case R.id.layout_school:
                 break;
             case R.id.layout_college:
                 break;
             case R.id.layout_bound:
+                if (!MyPreference.getInstance().ifBound(this)){
+                    boundMobile();
+                }
                 break;
         }
     }
@@ -162,6 +200,45 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 //        intent.putExtra("return-data", true);
 
         startActivityForResult(Intent.createChooser(intent, ALBUM_TAG), ALBUM_CODE);
+    }
+
+    private void setNickName(){
+        final EditText editText = new EditText(this);
+        AlertDialog dialog = new AlertDialog
+                .Builder(this)
+                .setView(editText)
+                .setPositiveButton(getResources().getString(R.string.sure),
+                        new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = editText.getText().toString();
+                        uploadNickName(name);
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        dialog.show();
+    }
+
+    private void boundMobile(){
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+//        RegisterPage registerPage = new RegisterPage();
+//        registerPage.setRegisterCallback(new EventHandler() {
+//            public void afterEvent(int event, int result, Object data) {
+//                // 解析注册结果
+//                if (result == SMSSDK.RESULT_COMPLETE) {
+//                    @SuppressWarnings("unchecked")
+//                    HashMap<String,Object> phoneMap = (HashMap<String, Object>) data;
+//                    String country = (String) phoneMap.get("country");
+//                    String phone = (String) phoneMap.get("phone");
+//
+//                    // 提交用户信息
+//                    uploadBoundMobile(phone);
+//                }
+//            }
+//        });
+//        registerPage.show(this);
     }
 
     @Override
@@ -191,9 +268,35 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             public void run() {
                 boolean res = DocNetwork.getInstance().changeInfo("", "", "", "", path);
                 Bundle bundle = new Bundle();
-                bundle.putString("path", path);
-                bundle.putBoolean("res", res);
+                bundle.putString(UPLOAD_HEADIMG_PATH_TAG, path);
+                bundle.putBoolean(UPLOAD_HEADIMG_RES_TAG, res);
                 handler.sendMessage(handler.obtainMessage(UPLOAD_HEADIMG_CODE, bundle));
+            }
+        });
+    }
+
+    private void uploadNickName(final String name){
+        ThreadPool.getInstance().submit(new Runnable() {
+            @Override
+            public void run() {
+                boolean res = DocNetwork.getInstance().changeInfo(name, "", "", "", "");
+                Bundle bundle = new Bundle();
+                bundle.putString(UPLOAD_NAME_TAG, name);
+                bundle.putBoolean(UPLOAD_HEADIMG_RES_TAG, res);
+                handler.sendMessage(handler.obtainMessage(UPLOAD_NAME_CODE, bundle));
+            }
+        });
+    }
+
+    private void uploadBoundMobile(final String mobile){
+        ThreadPool.getInstance().submit(new Runnable() {
+            @Override
+            public void run() {
+                boolean res = DocNetwork.getInstance().boundMobile(HttpData.userNum.toString(), mobile);
+                Bundle bundle = new Bundle();
+                bundle.putString(BOUND_MOBILE_TAG, mobile);
+                bundle.putBoolean(UPLOAD_HEADIMG_RES_TAG, res);
+                handler.sendMessage(handler.obtainMessage(BOUND_MOBILE_CODE, bundle));
             }
         });
     }

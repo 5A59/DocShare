@@ -186,12 +186,20 @@ public class DocNetwork {
         para.put("sex", sex);
         para.put("school", school);
         para.put("college", college);
-        Map<String,File> file = new HashMap<>();
-        file.put("headImg", new File(headImg));
+
+        Map<String,File> file = null;
+        if (headImg != null && !headImg.isEmpty()){
+            file = new HashMap<>();
+            file.put("headImg", new File(headImg));
+        }
 
         Response response = null;
         try {
-            response = network.postFile(HttpUrl.changeInfoUrl, para, file);
+            if (file != null){
+                response = network.postFile(HttpUrl.changeInfoUrl, para, file);
+            }else {
+                response = network.post(HttpUrl.changeInfoUrl, para);
+            }
             Res res = JsonUtil.getInstance().resParse(response.body().string());
 
             if (SuccessCheck.ifSuccess(res.getCode())){

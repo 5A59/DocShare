@@ -9,6 +9,7 @@ import android.telephony.TelephonyManager;
 
 import java.util.Timer;
 
+import cn.smssdk.SMSSDK;
 import docnetwork.DocNetwork;
 import docnetwork.HttpData;
 import docnetwork.dataobj.Login;
@@ -22,8 +23,11 @@ import utils.MyPreference;
  */
 public class WelcomeActivity extends AppCompatActivity{
 
-    private static int LOGIN_CODE = 0;
-    private static int TIMER_CODE = 1;
+    private final static String APP_KEY = "fa098d1f88ec";
+    private final static String APP_SECRET = "b0f1c657c182c74ab5362cdaac8309a0";
+
+    private final static int LOGIN_CODE = 0;
+    private final static int TIMER_CODE = 1;
 
     private Timer timer;
 
@@ -32,6 +36,9 @@ public class WelcomeActivity extends AppCompatActivity{
         public void handleMessage(Message msg) {
             if (msg.what == LOGIN_CODE){
                 Login login = (Login) msg.obj;
+                HttpData.userNum.setLength(0);
+                HttpData.userNum.append(login.getUserNum());
+
                 Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                 intent.putExtra(MainActivity.LOGIN_MES, login);
                 startActivity(intent);
@@ -61,11 +68,16 @@ public class WelcomeActivity extends AppCompatActivity{
 //            }
 //        }, 0, 1000);
         initHttpCookie();
+        initSms();
         login();
     }
 
     private void initView(){
 
+    }
+
+    private void initSms(){
+        SMSSDK.initSDK(this, APP_KEY, APP_SECRET);
     }
 
     private void login(){

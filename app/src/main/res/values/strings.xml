@@ -39,4 +39,18 @@
 
     <string name="upload_headimg_success">上传头像成功</string>
     <string name="upload_headimg_fail">上传头像失败</string>
+    <string name="upload_name_success">上传昵称成功</string>
+    <string name="upload_name_fail">上传昵称失败</string>
+    <string name="bound_mobile_success">绑定手机号成功</string>
+    <string name="bound_mobile_fail">绑定手机号失败</string>
+
+    <string name="send_auth">发送验证码</string>
+    <string name="auth_sure">提交验证码</string>
+    <string name="input_mobile">请输入手机号</string>
+    <string name="input_auth">请输入验证码</string>
+    <string name="no_mobile">请输入正确的手机号</string>
+    <string name="no_auth">请输入正确的验证码</string>
+    <string name="auth_sended">验证码已发送</string>
+    <string name="auth_success">验证成功</string>
+    <string name="auth_fail">验证失败</string>
 </resources>

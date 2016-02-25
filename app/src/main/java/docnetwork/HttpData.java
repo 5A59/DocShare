@@ -8,4 +8,5 @@ import docnetwork.dataobj.Info;
 public class HttpData {
     public static Info info = new Info();
     public static StringBuffer userName = new StringBuffer();
+    public static StringBuffer userNum = new StringBuffer();
 }
