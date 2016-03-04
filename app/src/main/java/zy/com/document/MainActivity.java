@@ -191,7 +191,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void initInfo(){
         if (loginMes != null && SuccessCheck.ifSuccess(loginMes.getCode())){
+            HttpData.loginSuccess = true;
             getInfo();
+        }else {
+            HttpData.loginSuccess = false;
         }
     }
 
@@ -312,7 +315,8 @@ public class MainActivity extends AppCompatActivity {
         ThreadPool.getInstance().submit(new Runnable() {
             @Override
             public void run() {
-                Info info = DocNetwork.getInstance().info(loginMes.getUserNum());
+//                Info info = DocNetwork.getInstance().info(loginMes.getUserNum());
+                Info info = DocNetwork.getInstance().info(HttpData.userNum.toString());
                 handler.sendMessage(handler.obtainMessage(INFO_RES_CODE, info));
             }
         });

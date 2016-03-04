@@ -35,22 +35,33 @@
     <string name="college">专业</string>
     <string name="bound_mobile">绑定手机号</string>
     <string name="un_bound_mobile">解绑手机号</string>
-    <string name="mobile_login">手机号登陆</string>
+    <string name="mobile_login">手机号登录</string>
+    <string name="logout">退出登录</string>
 
+    <string name="upload_sch_col_success">设置学校专业成功</string>
+    <string name="upload_sch_col_fail">设置学校专业失败</string>
     <string name="upload_headimg_success">上传头像成功</string>
     <string name="upload_headimg_fail">上传头像失败</string>
     <string name="upload_name_success">上传昵称成功</string>
     <string name="upload_name_fail">上传昵称失败</string>
     <string name="bound_mobile_success">绑定手机号成功</string>
     <string name="bound_mobile_fail">绑定手机号失败</string>
+    <string name="unbound_mobile_success">解绑手机号成功</string>
+    <string name="unbound_mobile_fail">解绑手机号失败</string>
+    <string name="if_unbound">是否解绑手机？解绑后无法同步信息</string>
 
     <string name="send_auth">发送验证码</string>
     <string name="auth_sure">提交验证码</string>
     <string name="input_mobile">请输入手机号</string>
     <string name="input_auth">请输入验证码</string>
+    <string name="input_pwd">请输入密码</string>
     <string name="no_mobile">请输入正确的手机号</string>
-    <string name="no_auth">请输入正确的验证码</string>
+    <string name="no_auth">请输入正确的验证码或密码</string>
     <string name="auth_sended">验证码已发送</string>
     <string name="auth_success">验证成功</string>
     <string name="auth_fail">验证失败</string>
+    <string name="fill_pwd">填写密码</string>
+
+    <string name="enter">开启资料大门</string>
+    <string name="if_remove">是否移除</string>
 </resources>

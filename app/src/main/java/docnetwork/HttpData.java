@@ -9,4 +9,5 @@ public class HttpData {
     public static Info info = new Info();
     public static StringBuffer userName = new StringBuffer();
     public static StringBuffer userNum = new StringBuffer();
+    public static boolean loginSuccess = false;
 }

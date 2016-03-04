@@ -123,10 +123,11 @@ public class DocNetwork {
         return new Login();
     }
 
-    public boolean boundMobile(String userNum, String mobile){
+    public boolean boundMobile(String userNum, String mobile, String password){
         Map<String,String> para = new HashMap<>();
-        para.put("userNum",userNum);
-        para.put("mobile",mobile);
+        para.put("userNum", userNum);
+        para.put("mobile", mobile);
+        para.put("password", password);
         Response response = null;
         try {
             response = network.post(HttpUrl.boundMobile, para);
@@ -143,10 +144,11 @@ public class DocNetwork {
         return false;
     }
 
-    public boolean unBoundMobile(String userNum, String mobile){
+    public boolean unBoundMobile(String userNum, String mobile, String password){
         Map<String,String> para = new HashMap<>();
-        para.put("userNum",userNum);
-        para.put("mobile",mobile);
+        para.put("userNum", userNum);
+        para.put("mobile", mobile);
+        para.put("password", password);
         Response response = null;
         try {
             response = network.post(HttpUrl.unBoundMobile, para);
@@ -493,10 +495,10 @@ public class DocNetwork {
         return new SchoolRes();
     }
 
-    public CollegeRes getCollege(int schId){
+    public CollegeRes getCollege(String sch){
         Response response = null;
         Map<String, String> para = new HashMap<>();
-        para.put("schId", "" + schId);
+        para.put("sch", sch);
         try {
             response = network.get(HttpUrl.getCollegeUrl, para);
             CollegeRes res = JsonUtil.getInstance().collegeResParse(response.body().string());

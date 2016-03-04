@@ -1,5 +1,7 @@
 package docnetwork.dataobj;
 
+import android.content.Intent;
+
 import java.io.Serializable;
 
 import docnetwork.HttpUrl;
@@ -10,6 +12,11 @@ import docnetwork.HttpUrl;
 public class Info implements Serializable{
     private String code;
     private Inf inf;
+
+    public Info(){
+        code = "fail";
+        inf = new Inf();
+    }
 
     public String getCode() {
         return code;
@@ -34,6 +41,19 @@ public class Info implements Serializable{
         private String college;
         private String headImg;
         private String mobile;
+
+        public Inf(){
+            this("", "", "", "", "", "");
+        }
+
+        public Inf(String name, String sex, String school, String college, String headImg, String mobile) {
+            this.name = name;
+            this.sex = sex;
+            this.school = school;
+            this.college = college;
+            this.headImg = headImg;
+            this.mobile = mobile;
+        }
 
         public String getMobile() {
             return mobile;

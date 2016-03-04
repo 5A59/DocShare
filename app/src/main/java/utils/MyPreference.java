@@ -12,6 +12,7 @@ public class MyPreference {
     private final static String USERNAME = "userName";
     private final static String PWD = "pwd";
     private final static String IF_BOUND = "bound";
+    private final static String IF_FIRST = "first";
     private final static String DEFAULT = "";
     private static MyPreference preference;
 
@@ -39,6 +40,18 @@ public class MyPreference {
 
     public SharedPreferences.Editor getEditor(SharedPreferences preferences){
         return preferences.edit();
+    }
+
+    public void setFirst(Context context){
+        SharedPreferences sharedPreferences = getPreferences(context);
+        SharedPreferences.Editor editor = getEditor(sharedPreferences);
+        editor.putBoolean(IF_FIRST, false).commit();
+    }
+
+    public boolean ifFirst(Context context){
+        SharedPreferences sharedPreferences = getPreferences(context);
+        boolean res = sharedPreferences.getBoolean(IF_FIRST, true);
+        return res;
     }
 
     public void setNameAndPwd(Context context, String userName, String pwd){

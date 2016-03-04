@@ -39,6 +39,14 @@ public class WelcomeActivity extends AppCompatActivity{
                 HttpData.userNum.setLength(0);
                 HttpData.userNum.append(login.getUserNum());
 
+                Logger.d("if first " + MyPreference.getInstance().ifFirst(WelcomeActivity.this));
+                if (MyPreference.getInstance().ifFirst(WelcomeActivity.this)){
+                    Intent intent = new Intent(WelcomeActivity.this, FirstIntroActivity.class);
+                    intent.putExtra(MainActivity.LOGIN_MES, login);
+                    startActivity(intent);
+                    finish();
+                    return ;
+                }
                 Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                 intent.putExtra(MainActivity.LOGIN_MES, login);
                 startActivity(intent);

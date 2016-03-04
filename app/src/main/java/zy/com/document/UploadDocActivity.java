@@ -1,10 +1,14 @@
 package zy.com.document;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +27,8 @@ import java.util.Map;
 import docnetwork.DocNetwork;
 import fileselecter.FileSelecterActivity;
 import fileselecter.FileList;
+import fileselecter.OnRecyclerItemClickListener;
+import fileselecter.SelectAdapter;
 import network.ThreadPool;
 import network.listener.UploadProcessListener;
 import utils.Logger;
@@ -38,8 +44,13 @@ public class UploadDocActivity extends AppCompatActivity implements View.OnClick
     private EditText contentEdit;
     private ImageView fileImg;
     private TextView fileText;
+    private RecyclerView recyclerView;
+    private SelectAdapter selectAdapter;
+    private AlertDialog dialog;
 
     private List<File> fileList;
+
+    private int delPos;
 
     private Handler handler = new Handler() {
         @Override
@@ -66,10 +77,42 @@ public class UploadDocActivity extends AppCompatActivity implements View.OnClick
         titleEdit = (EditText) this.findViewById(R.id.edit_title);
         contentEdit = (EditText) this.findViewById(R.id.edit_content);
         fileImg = (ImageView) this.findViewById(R.id.img_add_file);
+        recyclerView = (RecyclerView) this.findViewById(R.id.recycle);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        selectAdapter = new SelectAdapter(this, fileList);
+        selectAdapter.setItemClickListener(new OnRecyclerItemClickListener() {
+            @Override
+            public void onClick(View v, int pos) {
+                dialog.show();
+            }
+        });
+        recyclerView.setAdapter(selectAdapter);
 
         fileImg.setOnClickListener(this);
 
         fileText = (TextView) this.findViewById(R.id.text_files);
+
+        dialog = new AlertDialog.Builder(this)
+                .setMessage(getResources().getString(R.string.if_remove))
+                .setPositiveButton(getResources().getString(R.string.sure), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (delPos != -1 && delPos < fileList.size()){
+                            fileList.remove(delPos);
+                            delPos = -1;
+                            selectAdapter.notifyDataSetChanged();
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
     }
 
     private void initToolBar(){
@@ -90,6 +133,7 @@ public class UploadDocActivity extends AppCompatActivity implements View.OnClick
 
     private void initData(){
         fileList = new ArrayList<>();
+        delPos = -1;
     }
 
     @Override
@@ -143,11 +187,7 @@ public class UploadDocActivity extends AppCompatActivity implements View.OnClick
             FileList tmpFile = (FileList) data.getSerializableExtra(FileSelecterActivity.FILE_SELECT_RES_KEY);
             if (tmpFile.getFiles() != null){
                 fileList.addAll(tmpFile.getFiles());
-                String fileString = "";
-                for (File f : fileList){
-                    fileString += f.getPath();
-                }
-                fileText.setText(fileString);
+                selectAdapter.notifyDataSetChanged();
             }
         }
     }

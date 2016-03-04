@@ -4,7 +4,7 @@ package docnetwork;
  * Created by zy on 15-11-22.
  */
 public class HttpUrl {
-    public static final String mainUrl = "http://192.168.1.104:8802/docs";
+    public static final String mainUrl = "http://192.168.23.102:8802/docs";
     public static final String registerUrl = mainUrl + "/register/";
     public static final String loginUrl = mainUrl + "/login/";
     public static final String noBoundLoginUrl = mainUrl + "/noBoundLogin/";

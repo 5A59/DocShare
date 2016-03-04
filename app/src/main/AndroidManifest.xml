@@ -42,6 +42,8 @@
         <activity android:name=".DownloadActivity"></activity>
         <activity android:name=".TestActivity"></activity>
         <activity android:name=".SettingActivity"></activity>
+        <activity android:name=".SchoolAndCollegeSelecterActivity"></activity>
+        <activity android:name=".FirstIntroActivity"></activity>
         <activity android:name=".SearchActivity"
             android:windowSoftInputMode="stateVisible"></activity>
         <activity android:name=".RegisterActivity"></activity>

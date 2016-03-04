@@ -18,15 +18,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
-import java.util.HashMap;
 
-import cn.smssdk.EventHandler;
-import cn.smssdk.SMSSDK;
-import cn.smssdk.gui.RegisterPage;
 import de.hdodenhof.circleimageview.CircleImageView;
 import docnetwork.DocNetwork;
 import docnetwork.HttpData;
+import docnetwork.SuccessCheck;
 import docnetwork.dataobj.Info;
+import docnetwork.dataobj.Login;
 import network.ThreadPool;
 import utils.GeneralUtils;
 import utils.Logger;
@@ -40,11 +38,19 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     public static final int UPLOAD_HEADIMG_CODE = 1;
     public static final int UPLOAD_NAME_CODE = 2;
     public static final int BOUND_MOBILE_CODE = 3;
+    public static final int UNBOUND_MOBILE_CODE = 4;
+    public static final int SCHOOL_CODE = 5;
+    public static final int LOGIN_CODE = 6;
     public static final String ALBUM_TAG = "select from album";
     public static final String UPLOAD_HEADIMG_RES_TAG = "res";
     public static final String UPLOAD_HEADIMG_PATH_TAG = "path";
     public static final String UPLOAD_NAME_TAG = "name";
     public static final String BOUND_MOBILE_TAG = "mobile";
+    public static final String PWD_TAG = "pwd";
+    public static final String LOGIN_TAG = "login";
+
+    private String sure;
+    private String cancel;
 
     private Toolbar toolbar;
 
@@ -60,6 +66,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private TextView collegeText;
     private TextView mobileText;
     private TextView mobileTitleText;
+    private TextView loginText;
+
+    private AlertDialog pwdDialog;
+    private AlertDialog sureDialog;
 
     private boolean ifChangeInfo;
 
@@ -91,15 +101,34 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             }else if (msg.what == BOUND_MOBILE_CODE){
                 if (bundle.getBoolean(UPLOAD_HEADIMG_RES_TAG)){
                     ifChangeInfo = true;
-                    mobileText.setText(bundle.getString(BOUND_MOBILE_TAG));
+                    String mobile = bundle.getString(BOUND_MOBILE_TAG);
+                    String pwd = bundle.getString(PWD_TAG);
+                    mobileText.setText(mobile);
                     mobileTitleText.setText(getResources().getString(R.string.un_bound_mobile));
                     GeneralUtils.getInstance().myToast(SettingActivity.this,
                             getResources().getString(R.string.bound_mobile_success));
                     MyPreference.getInstance().setBound(SettingActivity.this, true);
+                    MyPreference.getInstance().setNameAndPwd(SettingActivity.this, mobile, pwd);
                 }else {
                     GeneralUtils.getInstance().myToast(SettingActivity.this,
                             getResources().getString(R.string.bound_mobile_fail));
                 }
+            }else if (msg.what == UNBOUND_MOBILE_CODE){
+                boolean res = (Boolean) msg.obj;
+                if (res){
+                    GeneralUtils.getInstance().myToast(SettingActivity.this,
+                            getResources().getString(R.string.unbound_mobile_success));
+                    MyPreference.getInstance().setBound(SettingActivity.this, false);
+                }else {
+                    GeneralUtils.getInstance().myToast(SettingActivity.this,
+                            getResources().getString(R.string.unbound_mobile_fail));
+                }
+            }else if (msg.what == SCHOOL_CODE){
+                ifChangeInfo = true;
+                String sch = bundle.getString(SchoolAndCollegeSelecterActivity.SCHOOL_TAG);
+                String col = bundle.getString(SchoolAndCollegeSelecterActivity.COLLEGE_TAG);
+                schoolText.setText(sch);
+                collegeText.setText(col);
             }
         }
     };
@@ -142,14 +171,18 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         collegeText = (TextView) this.findViewById(R.id.text_college);
         mobileText = (TextView) this.findViewById(R.id.text_mobile);
         mobileTitleText = (TextView) this.findViewById(R.id.text_mobile_title);
+        loginText = (TextView) this.findViewById(R.id.text_login);
 
         headLayout.setOnClickListener(this);
         nameLayout.setOnClickListener(this);
         schoolLayout.setOnClickListener(this);
         collegeLayout.setOnClickListener(this);
         boundLayout.setOnClickListener(this);
+        loginText.setOnClickListener(this);
 
         ifChangeInfo = false;
+        sure = getResources().getString(R.string.sure);
+        cancel = getResources().getString(R.string.cancel);
     }
 
     private void initInfo(){
@@ -161,7 +194,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         if (info.getMobile() == null || info.getMobile().isEmpty()){
             mobileTitleText.setText(getResources().getString(R.string.bound_mobile));
         }else {
+            mobileTitleText.setText(getResources().getString(R.string.un_bound_mobile));
             mobileText.setText(info.getMobile());
+            loginText.setText(getResources().getString(R.string.logout));
         }
     }
 
@@ -175,14 +210,23 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 setNickName();
                 break;
             case R.id.layout_school:
-                break;
             case R.id.layout_college:
+                setSchAndCol();
                 break;
             case R.id.layout_bound:
                 if (!MyPreference.getInstance().ifBound(this)){
                     boundMobile();
+                }else {
+                    unBoundMobile();
                 }
                 break;
+            case R.id.text_login:
+                if (!MyPreference.getInstance().ifBound(this)){
+                    login();
+                }else {
+                    logout();
+                }
+
         }
     }
 
@@ -220,25 +264,72 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         dialog.show();
     }
 
+    private void setSchAndCol(){
+        Intent intent = new Intent(this, SchoolAndCollegeSelecterActivity.class);
+        startActivityForResult(intent, SCHOOL_CODE);
+    }
+
     private void boundMobile(){
         Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
-//        RegisterPage registerPage = new RegisterPage();
-//        registerPage.setRegisterCallback(new EventHandler() {
-//            public void afterEvent(int event, int result, Object data) {
-//                // 解析注册结果
-//                if (result == SMSSDK.RESULT_COMPLETE) {
-//                    @SuppressWarnings("unchecked")
-//                    HashMap<String,Object> phoneMap = (HashMap<String, Object>) data;
-//                    String country = (String) phoneMap.get("country");
-//                    String phone = (String) phoneMap.get("phone");
-//
-//                    // 提交用户信息
-//                    uploadBoundMobile(phone);
-//                }
-//            }
-//        });
-//        registerPage.show(this);
+        startActivityForResult(intent, BOUND_MOBILE_CODE);
+    }
+
+    private void unBoundMobile(){
+        final EditText editText = new EditText(this);
+        editText.setHint(getResources().getString(R.string.input_pwd));
+        if (pwdDialog == null){
+            pwdDialog = new AlertDialog.Builder(this)
+                    .setView(editText)
+                    .setPositiveButton(sure, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String pwd = editText.getText().toString();
+                            if (pwd != null && !pwd.isEmpty()){
+                                uploadUnBoundMobile(mobileText.getText().toString(), pwd);
+                                pwdDialog.dismiss();
+                            }
+                        }
+                    })
+                    .setNegativeButton(cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            pwdDialog.dismiss();
+                        }
+                    })
+                    .create();
+
+        }
+        if (sureDialog == null){
+            sureDialog = new AlertDialog.Builder(this)
+                    .setMessage(getResources().getString(R.string.if_unbound))
+                    .setPositiveButton(sure, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            pwdDialog.show();
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create();
+
+        }
+
+        sureDialog.show();
+    }
+
+    private void login(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, LOGIN_CODE);
+    }
+
+    private void logout(){
+        MyPreference.getInstance().setNameAndPwd(this, "", "");
+        MyPreference.getInstance().setBound(this, false);
     }
 
     @Override
@@ -246,7 +337,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK){
-            Logger.d("return album fail");
+            Logger.d("activity result return fail");
             return ;
         }
         if (requestCode == ALBUM_CODE){
@@ -259,6 +350,31 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             String path = cursor.getString(columnIndex);
 
             uploadHeadImg(path);
+        }else if (requestCode == BOUND_MOBILE_CODE){
+            Bundle bundle = data.getExtras();
+            boolean res = bundle.getBoolean(RegisterActivity.RES);
+            if (res){
+                String mobile = bundle.getString(RegisterActivity.PHONE);
+                String password = bundle.getString(RegisterActivity.PWD);
+                uploadBoundMobile(mobile, password);
+            }
+        }else if (requestCode == SCHOOL_CODE){
+            Bundle bundle = data.getExtras();
+            handler.sendMessage(handler.obtainMessage(SCHOOL_CODE, bundle));
+        }else if (requestCode == LOGIN_CODE){
+            Bundle bundle = data.getExtras();
+            Login login = (Login) bundle.getSerializable(LoginActivity.LOGIN_MES_TAG);
+            String mobile = bundle.getString(LoginActivity.USER_NAME_TAG);
+            String pwd = bundle.getString(LoginActivity.PWD_TAG);
+            if (SuccessCheck.ifSuccess(login.getCode())){
+                ifChangeInfo = true;
+                loginText.setText(getResources().getString(R.string.logout));
+                HttpData.userNum.setLength(0);
+                HttpData.userNum.append(login.getUserNum());
+                MyPreference.getInstance().setBound(this, true);
+                MyPreference.getInstance().setNameAndPwd(this, mobile, pwd);
+            }
+//            handler.sendMessage(handler.obtainMessage());
         }
     }
 
@@ -288,17 +404,29 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    private void uploadBoundMobile(final String mobile){
+    private void uploadBoundMobile(final String mobile, final String password){
         ThreadPool.getInstance().submit(new Runnable() {
             @Override
             public void run() {
-                boolean res = DocNetwork.getInstance().boundMobile(HttpData.userNum.toString(), mobile);
+                boolean res = DocNetwork.getInstance().boundMobile(HttpData.userNum.toString(), mobile, password);
                 Bundle bundle = new Bundle();
                 bundle.putString(BOUND_MOBILE_TAG, mobile);
+                bundle.putString(PWD_TAG, password);
                 bundle.putBoolean(UPLOAD_HEADIMG_RES_TAG, res);
                 handler.sendMessage(handler.obtainMessage(BOUND_MOBILE_CODE, bundle));
             }
         });
+    }
+
+    private void uploadUnBoundMobile(final String mobile, final String password){
+        ThreadPool.getInstance().submit(new Runnable() {
+            @Override
+            public void run() {
+                boolean res = DocNetwork.getInstance().unBoundMobile(HttpData.userNum.toString(), mobile, password);
+                handler.sendMessage(handler.obtainMessage(UNBOUND_MOBILE_CODE, res));
+            }
+        });
+
     }
 
     public void setRes(){

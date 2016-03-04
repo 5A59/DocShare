@@ -11,7 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import docnetwork.DocNetwork;
+import docnetwork.HttpData;
+import docnetwork.SuccessCheck;
 import docnetwork.dataobj.Login;
+import network.LoadingMes;
 import network.MyDownloadManager;
 import network.ThreadPool;
 
@@ -19,6 +22,9 @@ import network.ThreadPool;
  * Created by zy on 16-1-6.
  */
 public class LoginActivity extends AppCompatActivity{
+    public static final String LOGIN_MES_TAG = "loginmes";
+    public static final String USER_NAME_TAG = "username";
+    public static final String PWD_TAG = "pwd";
     private static final int LOGIN_ID = 0;
 
     private EditText userNameEdit;
@@ -29,15 +35,24 @@ public class LoginActivity extends AppCompatActivity{
 
     private Boolean logining;
 
+    private String userName;
+    private String pwd;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             logining = false;
             if (msg.what == LOGIN_ID){
                 loginMes = (Login) msg.obj;
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("login", loginMes);
-                startActivity(intent);
+                if (SuccessCheck.ifSuccess(loginMes.getCode())){
+                    HttpData.loginSuccess = true;
+                }else {
+                    HttpData.loginSuccess = false;
+                }
+//                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                intent.putExtra("login", loginMes);
+//                startActivity(intent);
+                setRes(loginMes);
                 finish();
             }
         }
@@ -69,8 +84,8 @@ public class LoginActivity extends AppCompatActivity{
 //                startActivity(intent);
                 if (!logining){
                     logining = true;
-                    String userName = userNameEdit.getText().toString();
-                    String pwd = pwdEdit.getText().toString();
+                    userName = userNameEdit.getText().toString();
+                    pwd = pwdEdit.getText().toString();
 
                     login(userName, pwd);
                 }
@@ -90,6 +105,16 @@ public class LoginActivity extends AppCompatActivity{
                 handler.sendMessage(handler.obtainMessage(LOGIN_ID, loginMes));
             }
         });
+    }
+
+    private void setRes(Login loginMes){
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(LOGIN_MES_TAG, loginMes);
+        bundle.putString(USER_NAME_TAG, userName);
+        bundle.putString(PWD_TAG, pwd);
+        intent.putExtras(bundle);
+        setResult(RESULT_OK, intent);
     }
 }
 
